@@ -5,12 +5,13 @@
   "main": "./distribution/index.js",
   "scripts": {
     "build": "babel ./source --out-dir ./distribution",
+    "prepublish": "npm run build",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register --recursive ./source/**/*.spec.js",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",
-    "url": "http://localhost/root/red-redux-class.git"
+    "url": "https://github.com/redeeps/red-redux-class.git"
   },
   "keywords": [
     "Redux",
@@ -21,7 +22,7 @@
     "Immutable"
   ],
   "author": "Jacek Raczykowski",
-  "license": "ISC",
+  "license" : "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "6.24.1",
