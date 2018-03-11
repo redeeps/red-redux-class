@@ -103,5 +103,3 @@ copy(ReduxClassArray, Array, justPassMethods, 'justPass', [], bindArrayPrototype
 copy(ReduxClassArray, Array, needsNewMethods, 'needsNew', [], bindArrayPrototype)
 copy(ReduxClassArray, Array, needsConstructorMethods, 'needsConstructor', [], bindArrayPrototype)
 copy(ReduxClassArray, Array, needsConstructorAndNewMethods, 'needsConstructorAndNew', [], bindArrayPrototype)
-
-window.ReduxClassArray = ReduxClassArray

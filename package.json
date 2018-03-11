@@ -5,11 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "babel ./source --out-dir ./distribution",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register,css:./src/test/cssNullCompiler.js --require ./src/test/setup-jsdom.js --recursive ./src/**/*.spec.js",
-    "test:target": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register,css:./src/test/cssNullCompiler.js --require ./src/test/setup-jsdom.js --recursive",
-    "test:watch": "npm run test -- --watch",
-    "test:jest": "jest",
-    "test:jwatch": "npm run test:jest -- --watch"
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register,css:./source/test/cssNullCompiler.js --recursive ./source/**/*.spec.js",
+    "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",
@@ -34,6 +31,7 @@
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-1": "6.24.1",
     "chai": "3.5.0",
+    "cross-env": "2.0.0",
     "mocha": "2.4.5"
   },
   "dependencies": {

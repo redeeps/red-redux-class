@@ -181,7 +181,3 @@ export default class ReduxClass {
     return this
   }
 }
-
-
-
-window.ReduxClass = ReduxClass

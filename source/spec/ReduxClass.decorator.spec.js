@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import ReduxClass from '../ReduxClass.class'
 import ReduxClassArray from '../ReduxClassArray.class'
 import ReduxClassWrapper, { privateMethods } from '../ReduxClass.decorator'
-import combineStateReducer from '../combineStateReducers'
+import combineReduxClassReducers from '../combineReduxClassReducers'
 
 describe('ReduxClass.decorator', function () {
   it('should set all objects to not new', function (done) {

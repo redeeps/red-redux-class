@@ -2,9 +2,6 @@ import { get } from 'lodash'
 import Logger from 'js-logger'
 import ReduxClass from './ReduxClass.class'
 
-window.allStates = {}
-window.actualState = {}
-
 function searchObjectForNew(state, parentKey = '', statePaths = []) {
   state.forEachInstance((attr, key, parent) => {
     const path = parentKey + '.' + key
@@ -41,10 +38,6 @@ export function ReduxClassWrapper(reducer, name = 'reducer') {
       Logger.warn('Reducer should be of ReduxClass type')
     }
     traverseStateForNew(newState)
-    window.actualState = window.actualState || {}
-    window.actualState[name] = newState
-    window.allStates[name] = window.allStates[name] || []
-    window.allStates[name].push(newState)
     return newState
   }
 
@@ -74,4 +67,3 @@ export const privateMethods = {
   traverseStateForNew,
   searchObjectForNew,
 }
-window.privateMethods = privateMethods
