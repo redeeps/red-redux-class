@@ -1,11 +1,11 @@
 {
   "name": "red-redux-class",
   "version": "1.0.0",
-  "description": "Use oobjects and composition for creating complex reducers which can be easily maintained.",
+  "description": "Use objects and composition for creating complex reducers which can be easily maintained.",
   "main": "./distribution/index.js",
   "scripts": {
     "build": "babel ./source --out-dir ./distribution",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register --recursive ./source/**/*.spec.js",
     "test:watch": "npm run test -- --watch"
   },
