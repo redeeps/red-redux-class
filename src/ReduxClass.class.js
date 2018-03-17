@@ -109,7 +109,7 @@ export default class ReduxClass {
       const pathArr = path.split('.')
       const pathArrCopy = [...pathArr]
       try {
-        return pathArr.reduce((prev, next) => prev.get(pathArrCopy.shift()), this)
+        return pathArr.reduce((accumulator) => accumulator.get(pathArrCopy.shift()), this)
       } catch (error) {
         Logger.warn(error)
       }
