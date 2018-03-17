@@ -4,7 +4,8 @@
   "description": "Use objects and composition for creating complex reducers which can be easily maintained.",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "babel ./src --out-dir ./dist",
+    "build": "npm run clean && babel ./src --out-dir ./dist --ignore spec.js",
+    "clean": "rimraf dist",
     "prepare": "npm run build",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register --recursive ./src/**/*.spec.js",
     "test:watch": "npm run test -- --watch"
@@ -22,7 +23,7 @@
     "Immutable"
   ],
   "author": "Jacek Raczykowski",
-  "license" : "MIT",
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "6.24.1",
@@ -32,7 +33,8 @@
     "babel-preset-stage-1": "6.24.1",
     "chai": "3.5.0",
     "cross-env": "2.0.0",
-    "mocha": "2.4.5"
+    "mocha": "2.4.5",
+    "rimraf": "^2.6.2"
   },
   "dependencies": {
     "js-logger": "1.3.0",
