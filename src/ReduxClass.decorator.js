@@ -28,8 +28,12 @@ function traverseStateForNew(state, paths) {
 }
 
 
-
-export function ReduxClassWrapper(reducer, name = 'reducer') {
+/**
+ * ReduxClass wrapper need to change ReduxClass $$new property to false after each reducer execution.
+ * Ensures that reducer is ReduxClass type.
+ * @param {reducer method} reducer 
+ */
+export function ReduxClassWrapper(reducer) {
 
   let decorated = decoratedReducer
 
@@ -63,6 +67,7 @@ export function ReduxClassWrapper(reducer, name = 'reducer') {
 }
 
 export default ReduxClassWrapper
+
 export const privateMethods = {
   traverseStateForNew,
   searchObjectForNew,

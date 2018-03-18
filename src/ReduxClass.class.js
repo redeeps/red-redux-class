@@ -1,8 +1,15 @@
-import { set, get } from 'lodash'
+import {
+  set,
+  get
+} from 'lodash'
 import Logger from 'js-logger'
 import ReduxClassException from './ReduxClassException.class'
 import ReduxClassSymbol from './ReduxClassSymbol'
-import { ARRAY_KEY, NEW_KEY, TYPEOF_KEY } from './ReduxClassArray.constants'
+import {
+  ARRAY_KEY,
+  NEW_KEY,
+  TYPEOF_KEY
+} from './ReduxClassArray.constants'
 
 export default class ReduxClass {
   constructor(initialState = {}) {
@@ -169,11 +176,11 @@ export default class ReduxClass {
     }
 
     const oldValue = this.get(key)
-    if (typeof oldValue !== typeof value
-      && oldValue !== undefined
-      && oldValue !== null
-      && value !== undefined
-      && value !== null
+    if (typeof oldValue !== typeof value &&
+      oldValue !== undefined &&
+      oldValue !== null &&
+      value !== undefined &&
+      value !== null
     ) {
       throw new ReduxClassException('Bad value type', `Value type should be the same as previous value: '${key}'@${this.constructor.name}`)
     }

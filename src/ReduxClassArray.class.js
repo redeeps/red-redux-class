@@ -1,16 +1,22 @@
 import ReduxClass from './ReduxClass.class'
-import { copy, bindArrayPrototype } from './reflection.utils'
-import { ARRAY_KEY } from './ReduxClassArray.constants'
+import {
+  bindMethods,
+  bindPrototype,
+} from './reflection.utils'
+import {
+  ARRAY_KEY,
+} from './ReduxClassArray.constants'
 //methods to clone
-const justPassMethods = ["includes", "indexOf", "keys", "entries", "forEach", "every", "some", "reduce", "reduceRight", "toString", "toLocaleString", "join", "reverse", "lastIndexOf", "find", "findIndex", "values"]
-const needsNewMethods = ["pop", "push", "shift", "unshift", "reverse", "copyWithin", "fill", "sort"]
-const needsConstructorMethods = ["slice", "filter", "map"]
-const needsConstructorAndNewMethods = ["splice"]
+const justPassMethods = ["includes", "indexOf", "keys", "entries", "forEach", "every", "some", "reduce", "reduceRight", "toString", "toLocaleString", "join", "reverse", "lastIndexOf", "find", "findIndex", "values", "slice", "filter", "map"]
+const needsNewMethods = ["pop", "push", "shift", "unshift", "reverse", "copyWithin", "fill", "sort", "splice"]
 
 //imitation of array for reducer state
 export default class ReduxClassArray extends ReduxClass {
   constructor(initialState = [], attributes) {
-    const { state, array } = ReduxClassArray.initialData(initialState, attributes)
+    const {
+      state,
+      array,
+    } = ReduxClassArray.initialData(initialState, attributes)
     super(state)
     this.initArray(array)
   }
@@ -22,23 +28,32 @@ export default class ReduxClassArray extends ReduxClass {
   }
 
   static initialData(initialState, attributes = {}) {
-    let array     // why do we use composition instead of inheritance? couse babel is not able to properly extend bultin objects (also using case specific plugin)
+    let array // why do we use composition instead of inheritance? couse babel is not able to properly extend bultin objects (also using case specific plugin)
     let state = {}
     if (ReduxClass.isReduxClass(initialState)) {
       array = [...initialState[ARRAY_KEY]]
-      state = { ...initialState, ...attributes }
+      state = { ...initialState,
+        ...attributes
+      }
     } else if (Array.isArray(initialState)) {
       array = [...initialState]
-      state = { ...attributes }
+      state = { ...attributes
+      }
     } else {
       array = []
       state = initialState
     }
-    return { state, array }
+    return {
+      state,
+      array
+    }
   }
 
   initialize(initialState) {
-    const { state, array } = ReduxClassArray.initialData(initialState)
+    const {
+      state,
+      array
+    } = ReduxClassArray.initialData(initialState)
     this.set(ARRAY_KEY, array)
     super.initialize(state)
   }
@@ -99,7 +114,5 @@ export default class ReduxClassArray extends ReduxClass {
   }
 }
 //clone proper methods
-copy(ReduxClassArray, Array, justPassMethods, 'justPass', [], bindArrayPrototype)
-copy(ReduxClassArray, Array, needsNewMethods, 'needsNew', [], bindArrayPrototype)
-copy(ReduxClassArray, Array, needsConstructorMethods, 'needsConstructor', [], bindArrayPrototype)
-copy(ReduxClassArray, Array, needsConstructorAndNewMethods, 'needsConstructorAndNew', [], bindArrayPrototype)
+bindMethods(ReduxClassArray, Array, justPassMethods, false, bindPrototype)
+bindMethods(ReduxClassArray, Array, needsNewMethods, true, bindPrototype)
