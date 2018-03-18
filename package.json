@@ -1,6 +1,6 @@
 {
   "name": "red-redux-class",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use objects and composition for creating complex reducers which can be easily maintained.",
   "main": "./dist/index.js",
   "scripts": {
