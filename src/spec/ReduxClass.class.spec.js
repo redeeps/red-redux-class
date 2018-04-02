@@ -215,5 +215,35 @@ describe('ReduxClass.class', function () {
         done()
       })
     })
+
+    describe('react propType', () => {
+      it('should return null if proper ReduxClass object provided', (done) => {
+        const prop = new ReduxClass()
+        expect(ReduxClass.propType()({prop},'prop','Component')).to.be.null
+        done()
+      })
+      it('should return null if proper extended ReduxClass object provided', (done) => {
+        class MyReduxClass extends ReduxClass {}
+        const prop = new MyReduxClass()
+        expect(ReduxClass.propType()({prop},'prop','Component')).to.be.null
+        expect(MyReduxClass.propType()({prop},'prop','Component')).to.be.null
+        done()
+      })
+      it('should return Error if extended ReduxClass object provided', (done) => {
+        class MyReduxClass extends ReduxClass {}
+        const prop = new ReduxClass()
+        expect(MyReduxClass.propType()({prop},'prop','Component') instanceof Error).to.be.true
+        done()
+      })
+      it('should return Error for any other types', (done) => {
+        expect(ReduxClass.propType()({prop: null},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({prop: ''},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({prop: 1},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({prop: true},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({prop: {}},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({prop: undefined},'prop','Component') instanceof Error).to.be.true
+        done()
+      })
+    })
   })
 })
