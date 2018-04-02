@@ -65,7 +65,7 @@ In your class file, extend the class with ReduxClass.
 
 #### File: yourReducer.js
 
-User your YourReduxClass object as initial state for your reducer. 
+Use your YourReduxClass object as initial state for your reducer. 
 For every change in state create new state using new().
   
     import { ReduxClassWrapper } from 'red-redux-class'    

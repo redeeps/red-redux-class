@@ -187,4 +187,19 @@ export default class ReduxClass {
     this[key] = value
     return this
   }
+
+  static propType() {
+    const classConstructor = this
+    return  (props, propName, componentName) => {
+      componentName = componentName || 'ANONYMOUS'
+    
+      if (!(props[propName] instanceof classConstructor)) {
+        return new Error(propName + ' in ' + componentName + " should be instanceof " + classConstructor.toString())
+      }
+    
+      // assume all ok
+      return null
+    }
+  }
+  
 }
