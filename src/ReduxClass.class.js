@@ -17,11 +17,25 @@ export default class ReduxClass {
     this.initNew()
     this.initialize(initialState)
   }
-
+  /** 
+   * If class needs properties of specific type use "types" object to define them.
+   * Classes can be used or primitives types strings: "boolean", "number", "string", "object"
+   *     static types = {
+   *       custom: Custom,
+   *       boolean: 'boolean',
+   *       string: 'string',
+   *       object: 'object',
+   *       number: 'number',
+   *     }
+   */
   static types = {}
 
   static privateProperties = [NEW_KEY, TYPEOF_KEY]
 
+  /**
+   * Check if provided variable is a reduxClass object
+   * @param {any} object 
+   */
   static isReduxClass(object) {
     return typeof object === 'object' && object !== null && object[TYPEOF_KEY] === ReduxClassSymbol
   }
@@ -30,6 +44,10 @@ export default class ReduxClass {
     this.$set(initialState)
   }
 
+  /**
+   * Inits $$new variable which determines if object is new and can be changed during redux cycles
+   * If object is not new, this.set will throw error
+   */
   initNew() {
     Object.defineProperty(this, NEW_KEY, {
       value: true,
@@ -38,6 +56,9 @@ export default class ReduxClass {
     })
   }
 
+  /**
+   * Is used to check if object is ReduxClass
+   */
   initType() {
     Object.defineProperty(this, TYPEOF_KEY, {
       value: ReduxClassSymbol,
@@ -47,10 +68,14 @@ export default class ReduxClass {
     })
   }
 
-
+/**
+ * Iterate all properties of ReduxClass type and call callback method
+ * @param {function} callback 
+ * @throws {ReduxClassException} Callback must be a function
+ */
   forEachInstance(callback) {
     if (typeof callback !== 'function') {
-      throw new ReduxClassException('Not a function', 'Callback needs to be a function')
+      throw new ReduxClassException('Not a function', 'Callback must be a function')
     }
     const keys = Object.keys(this).concat(Object.keys(this[ARRAY_KEY] || {}))
     keys.forEach((key) => {
@@ -74,7 +99,7 @@ export default class ReduxClass {
       if (ReduxClass.isReduxClass(child)) {
         const newSelf = this.isNew() ? this : this.$new()
         const newPath = pathParts.slice(1).join('.') // get rest of the path
-        if (newPath === "") {
+        if (newPath === '') {
           // return last but create new if is instance of ReduxClass
           const newChild = child.isNew() ? child : child.$new()
           newSelf.set(childPath, newChild)

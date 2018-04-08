@@ -7,8 +7,8 @@ import {
   ARRAY_KEY,
 } from './ReduxClassArray.constants'
 //methods to clone
-const justPassMethods = ["includes", "indexOf", "keys", "entries", "forEach", "every", "some", "reduce", "reduceRight", "toString", "toLocaleString", "join", "reverse", "lastIndexOf", "find", "findIndex", "values", "slice", "filter", "map"]
-const needsNewMethods = ["pop", "push", "shift", "unshift", "reverse", "copyWithin", "fill", "sort", "splice"]
+const justPassMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
+const needsNewMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
 
 //imitation of array for reducer state
 export default class ReduxClassArray extends ReduxClass {
