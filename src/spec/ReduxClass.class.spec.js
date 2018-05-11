@@ -7,7 +7,7 @@ describe('ReduxClass.class', function () {
 
   }
 
-  class TestReducer extends ReduxClass {
+  class TestState extends ReduxClass {
     static types = {
       custom: Custom,
       boolean: 'boolean',
@@ -79,7 +79,7 @@ describe('ReduxClass.class', function () {
       done()
     })
     it('should throw error if type is different from types property from boolean', function (done) {
-      const state = new TestReducer()
+      const state = new TestState()
       let vars = [10, '', {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'boolean', value)
@@ -90,7 +90,7 @@ describe('ReduxClass.class', function () {
       done()
     })
     it('should throw error if type is different from types property from number', function (done) {
-      const state = new TestReducer()
+      const state = new TestState()
       let vars = [true, '', {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'number', value)
@@ -101,7 +101,7 @@ describe('ReduxClass.class', function () {
       done()
     })
     it('should throw error if type is different from types property from string', function (done) {
-      const state = new TestReducer()
+      const state = new TestState()
       let vars = [true, 10, {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'string', value)
@@ -112,7 +112,7 @@ describe('ReduxClass.class', function () {
       done()
     })
     it('should throw error if type is different from types property from object', function (done) {
-      const state = new TestReducer()
+      const state = new TestState()
       let vars = [true, '', 10]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'object', value)
@@ -124,14 +124,14 @@ describe('ReduxClass.class', function () {
     })
 
     it('should set proper types', (done) => {
-      const state = new TestReducer()
+      const state = new TestState()
       state.set('custom', 1)
       expect(state.get('custom') instanceof Custom).to.be.eql(true)
       done()
     })
 
     it('should set null', (done) => {
-      const state = new TestReducer()
+      const state = new TestState()
       state.set('custom', 1)
       state.set('custom', null)
       expect(state.get('custom')).to.be.null
@@ -139,14 +139,14 @@ describe('ReduxClass.class', function () {
     })
 
     it('should return this if set value by key', (done) => {
-      const state = new TestReducer()
+      const state = new TestState()
       const state2 = state.set('custom', 1)
       expect(state === state2).to.be.true
       done()
     })
 
     it('should return this if set values by object', (done) => {
-      const state = new TestReducer()
+      const state = new TestState()
       const state2 = state.set({
         custom: '1',
         test: true,
@@ -244,6 +244,50 @@ describe('ReduxClass.class', function () {
         expect(ReduxClass.propType()({prop: undefined},'prop','Component') instanceof Error).to.be.true
         done()
       })
+    })
+
+    describe('initDefaults', () => {
+      class TestStateWithDefaults extends ReduxClass {
+        static defaults = {
+          custom: new Custom(),
+          boolean: false,
+          string: 'string',
+          object: { object: 'object'},
+          number: 0,
+          none: null,
+        }
+      }
+      it('should set default values', (done) =>{
+        const state = new TestStateWithDefaults()
+        expect(state.get('custom')).to.be.eql(new Custom())
+        expect(state.get('boolean')).to.be.false
+        expect(state.get('string')).to.be.eql('string')
+        expect(state.get('object')).to.be.eql({ object: 'object'})
+        expect(state.get('number')).to.be.eql(0)
+        expect(state.get('none')).to.be.eql(null)
+        done()
+      })
+
+      it('should be able to set non-null value', (done) =>{
+        const state = new TestStateWithDefaults()
+        state.set('none', 'string')
+        expect(state.get('none')).to.be.eql('string')
+        done()
+      })
+
+      it('should throw error', (done) => {
+        class TestStateWithDefaultsAndTypes extends TestStateWithDefaults {
+          static types = {
+            number: 'boolean',
+          }
+        }
+        const shouldThrow = () => {
+          const state = new TestStateWithDefaultsAndTypes()
+        }
+        expect(shouldThrow).to.throw
+        done()
+      })
+
     })
   })
 })

@@ -16,6 +16,7 @@ export default class ReduxClass {
     this.initType()
     this.initNew()
     this.initialize(initialState)
+    this.initDefaults()
   }
   /** 
    * If class needs properties of specific type use "types" object to define them.
@@ -66,6 +67,20 @@ export default class ReduxClass {
       writable: false,
       configurable: false,
     })
+  }
+
+  /**
+   * Init state with class default values
+   */
+  initDefaults() {
+    const defaults = this.constructor.defaults
+    if (defaults) {
+      Object.keys(defaults).forEach((key) => {
+        if (!this[key]) {
+          this.set(key, defaults[key])
+        }
+      })
+    }
   }
 
 /**
@@ -189,7 +204,7 @@ export default class ReduxClass {
     }
     if (typeof types[key] === 'string') {
       if (typeof value !== types[key]) {
-        throw new ReduxClassException('Bad value type', `Value type should be as set in static types property: '${key}'@${this.constructor.name}`)
+        throw new ReduxClassException('Bad value type', `Value type should be as set in static types property: '${key}'@${this.constructor.name} = ${this.constructor.types[key]}`)
       }
     } else if (types[key] && !(value instanceof types[key])) {
       value = new types[key](value)

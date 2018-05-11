@@ -476,4 +476,22 @@ describe('ReduxClassArray.class', function () {
     expect(target.isNew()).to.be.true
     done()
   })
+
+  describe('isEmpty', () => {
+    it('should return true if array has no elements', (done) => {
+      const arr = new ReduxClassArray([])
+      expect(arr.isEmpty()).to.be.true
+      done()
+    })
+    it('should return false if array has one element', (done) => {
+      const arr = new ReduxClassArray([1])
+      expect(arr.isEmpty()).to.be.false
+      done()
+    })
+    it('should return false if array has more elements', (done) => {
+      const arr = new ReduxClassArray([1,2,3])
+      expect(arr.isEmpty()).to.be.false
+      done()
+    })
+  })
 })

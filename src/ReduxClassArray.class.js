@@ -112,6 +112,10 @@ export default class ReduxClassArray extends ReduxClass {
     super.set(data, value)
     return this
   }
+
+  isEmpty() {
+    return this[ARRAY_KEY].length === 0
+  }
 }
 //clone proper methods
 bindMethods(ReduxClassArray, Array, justPassMethods, false, bindPrototype)
