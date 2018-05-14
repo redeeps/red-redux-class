@@ -251,6 +251,7 @@ describe('ReduxClass.class', function () {
         static defaults = {
           custom: new Custom(),
           boolean: false,
+          boolean2: true,
           string: 'string',
           object: { object: 'object'},
           number: 0,
@@ -261,10 +262,18 @@ describe('ReduxClass.class', function () {
         const state = new TestStateWithDefaults()
         expect(state.get('custom')).to.be.eql(new Custom())
         expect(state.get('boolean')).to.be.false
+        expect(state.get('boolean2')).to.be.true
         expect(state.get('string')).to.be.eql('string')
         expect(state.get('object')).to.be.eql({ object: 'object'})
         expect(state.get('number')).to.be.eql(0)
         expect(state.get('none')).to.be.eql(null)
+        done()
+      })
+
+      it('should set default only when property is undefined', (done) =>{
+        const state = new TestStateWithDefaults({boolean2: false, object: null})
+        expect(state.get('boolean2')).to.be.false
+        expect(state.get('object')).to.be.null
         done()
       })
 

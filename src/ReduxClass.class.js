@@ -76,7 +76,7 @@ export default class ReduxClass {
     const defaults = this.constructor.defaults
     if (defaults) {
       Object.keys(defaults).forEach((key) => {
-        if (!this[key]) {
+        if (typeof this[key] === 'undefined') {
           this.set(key, defaults[key])
         }
       })
