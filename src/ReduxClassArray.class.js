@@ -7,8 +7,8 @@ import {
   ARRAY_KEY,
 } from './ReduxClassArray.constants'
 //methods to clone
-const justPassMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
-const needsNewMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
+const immutableMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
+const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
 
 //imitation of array for reducer state
 export default class ReduxClassArray extends ReduxClass {
@@ -63,12 +63,7 @@ export default class ReduxClassArray extends ReduxClass {
     if (arrayType && arrayType.constructor) {
       array = array.map((el) => (el instanceof arrayType) ? el : new arrayType(el))
     }
-    Object.defineProperty(this, ARRAY_KEY, {
-      value: array,
-      enumerable: false,
-      writable: true,
-      configurable: false,
-    })
+    this.initHiddenProperty(ARRAY_KEY, array)
   }
 
   $new() {
@@ -116,7 +111,11 @@ export default class ReduxClassArray extends ReduxClass {
   isEmpty() {
     return this[ARRAY_KEY].length === 0
   }
+
+  toJSON() {
+    return this[ARRAY_KEY]
+  }
 }
 //clone proper methods
-bindMethods(ReduxClassArray, Array, justPassMethods, false, bindPrototype)
-bindMethods(ReduxClassArray, Array, needsNewMethods, true, bindPrototype)
+bindMethods(ReduxClassArray, Array, immutableMethods, false, bindPrototype)
+bindMethods(ReduxClassArray, Array, mutableMethods, true, bindPrototype)

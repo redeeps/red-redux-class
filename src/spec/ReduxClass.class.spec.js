@@ -299,4 +299,23 @@ describe('ReduxClass.class', function () {
 
     })
   })
+  describe('initHiddenProperty', () => {
+    it('should create hidden property', (done) => {
+      class TestClass extends ReduxClass {
+        constructor(...args) {
+          super(...args)
+          this.initHiddenProperty('hiddenProperty', true)
+        }
+      }
+      const testObject = new TestClass()
+      const descriptor = Object.getOwnPropertyDescriptor(testObject, 'hiddenProperty')
+      expect(descriptor).to.be.deep.equal({ 
+        value: true,
+        writable: true,
+        enumerable: false,
+        configurable: false,
+      })
+      done()
+    })
+  })
 })

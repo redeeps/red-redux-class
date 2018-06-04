@@ -46,27 +46,32 @@ export default class ReduxClass {
   }
 
   /**
+   * Use to create not enumerable properties
+   * @param {string} key 
+   * @param {*} value 
+   */
+  initHiddenProperty(key, value) {
+    Object.defineProperty(this, key, {
+      value: value,
+      enumerable: false,
+      writable: true,
+      configurable: false,
+    })
+  }
+
+  /**
    * Inits $$new variable which determines if object is new and can be changed during redux cycles
    * If object is not new, this.set will throw error
    */
   initNew() {
-    Object.defineProperty(this, NEW_KEY, {
-      value: true,
-      enumerable: false,
-      writable: true,
-    })
+    this.initHiddenProperty(NEW_KEY, true)
   }
 
   /**
    * Is used to check if object is ReduxClass
    */
   initType() {
-    Object.defineProperty(this, TYPEOF_KEY, {
-      value: ReduxClassSymbol,
-      enumerable: false,
-      writable: false,
-      configurable: false,
-    })
+    this.initHiddenProperty(TYPEOF_KEY, ReduxClassSymbol)
   }
 
   /**

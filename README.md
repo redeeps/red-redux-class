@@ -84,3 +84,8 @@ For every change in state create new state using new().
     }
 
     export default ReduxClassWrapper(yourReducer)
+
+## CHANGELOG
+### 1.0.5
+- added initHiddenProperty to easily add hidden properties
+- added toJSON method for array redux class

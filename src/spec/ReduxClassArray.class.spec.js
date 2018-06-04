@@ -494,4 +494,17 @@ describe('ReduxClassArray.class', function () {
       done()
     })
   })
+
+  describe('toJSON', (done) => {
+    it('should show array class as array', (done) => {
+      const state = new ReduxClassArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      expect(JSON.stringify(state)).to.be.equal('[1,2,3,4,5,6,7,8,9,10]')
+      done()
+    })
+    it('should show empty array class as empty array', (done) => {
+      const state = new ReduxClassArray([])
+      expect(JSON.stringify(state)).to.be.equal('[]')
+      done()
+    })
+  })
 })
