@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import ReduxClass from './ReduxClass.class'
 import ReduxClassArray from './ReduxClassArray.class'
 import * as ReduxClassArrayConstants from './ReduxClassArray.constants'
