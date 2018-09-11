@@ -1,13 +1,13 @@
 {
   "name": "red-redux-class",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Use objects and composition for creating complex reducers which can be easily maintained.",
   "main": "./dist/index.js",
   "scripts": {
     "build": "npm run clean && babel ./src --out-dir ./dist --ignore spec.js",
     "clean": "rimraf dist",
     "prepare": "npm run build",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register --recursive ./src/**/*.spec.js",
+    "test": "cross-env NODE_ENV=test mocha --require babel-core/register --recursive ./src/**/*.spec.js",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
