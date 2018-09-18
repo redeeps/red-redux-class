@@ -147,7 +147,7 @@ describe('ReduxClass.class', function () {
 
     it('should return this if set values by object', (done) => {
       const state = new TestState()
-      const state2 = state.set({
+      const state2 = state.setData({
         custom: '1',
         test: true,
       })
@@ -194,7 +194,7 @@ describe('ReduxClass.class', function () {
       state.get('inner1').$setNotNew()
       state.get('inner1').get('inner2').$setNotNew()
       state.get('inner1').get('inner2').get('inner3').$setNotNew()
-      const [target, root] = state.new('inner1.inner2.inner3')
+      const [target, root] = state.newPath('inner1.inner2.inner3')
       expect(root.isNew()).to.be.true
       expect(root.get('inner1').isNew()).to.be.true
       expect(root.get('inner1').get('inner2').isNew()).to.be.true
@@ -207,41 +207,32 @@ describe('ReduxClass.class', function () {
 
 
   describe('static', () => {
-    describe('privateProperties', () => {
-      it('should have proper private properties', (done) => {
-        const privateProperties = ReduxClass.privateProperties
-        expect(privateProperties.indexOf('$$new')).to.not.be.equal(-1)
-        expect(privateProperties.indexOf('$$typeof')).to.not.be.equal(-1)
-        done()
-      })
-    })
-
     describe('react propType', () => {
       it('should return null if proper ReduxClass object provided', (done) => {
         const prop = new ReduxClass()
-        expect(ReduxClass.propType()({prop},'prop','Component')).to.be.null
+        expect(ReduxClass.propType()({ prop }, 'prop', 'Component')).to.be.null
         done()
       })
       it('should return null if proper extended ReduxClass object provided', (done) => {
-        class MyReduxClass extends ReduxClass {}
+        class MyReduxClass extends ReduxClass { }
         const prop = new MyReduxClass()
-        expect(ReduxClass.propType()({prop},'prop','Component')).to.be.null
-        expect(MyReduxClass.propType()({prop},'prop','Component')).to.be.null
+        expect(ReduxClass.propType()({ prop }, 'prop', 'Component')).to.be.null
+        expect(MyReduxClass.propType()({ prop }, 'prop', 'Component')).to.be.null
         done()
       })
       it('should return Error if extended ReduxClass object provided', (done) => {
-        class MyReduxClass extends ReduxClass {}
+        class MyReduxClass extends ReduxClass { }
         const prop = new ReduxClass()
-        expect(MyReduxClass.propType()({prop},'prop','Component') instanceof Error).to.be.true
+        expect(MyReduxClass.propType()({ prop }, 'prop', 'Component') instanceof Error).to.be.true
         done()
       })
       it('should return Error for any other types', (done) => {
-        expect(ReduxClass.propType()({prop: null},'prop','Component') instanceof Error).to.be.true
-        expect(ReduxClass.propType()({prop: ''},'prop','Component') instanceof Error).to.be.true
-        expect(ReduxClass.propType()({prop: 1},'prop','Component') instanceof Error).to.be.true
-        expect(ReduxClass.propType()({prop: true},'prop','Component') instanceof Error).to.be.true
-        expect(ReduxClass.propType()({prop: {}},'prop','Component') instanceof Error).to.be.true
-        expect(ReduxClass.propType()({prop: undefined},'prop','Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: null }, 'prop', 'Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: '' }, 'prop', 'Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: 1 }, 'prop', 'Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: true }, 'prop', 'Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: {} }, 'prop', 'Component') instanceof Error).to.be.true
+        expect(ReduxClass.propType()({ prop: undefined }, 'prop', 'Component') instanceof Error).to.be.true
         done()
       })
     })
@@ -253,31 +244,31 @@ describe('ReduxClass.class', function () {
           boolean: false,
           boolean2: true,
           string: 'string',
-          object: { object: 'object'},
+          object: { object: 'object' },
           number: 0,
           none: null,
         }
       }
-      it('should set default values', (done) =>{
+      it('should set default values', (done) => {
         const state = new TestStateWithDefaults()
         expect(state.get('custom')).to.be.eql(new Custom())
         expect(state.get('boolean')).to.be.false
         expect(state.get('boolean2')).to.be.true
         expect(state.get('string')).to.be.eql('string')
-        expect(state.get('object')).to.be.eql({ object: 'object'})
+        expect(state.get('object')).to.be.eql({ object: 'object' })
         expect(state.get('number')).to.be.eql(0)
         expect(state.get('none')).to.be.eql(null)
         done()
       })
 
-      it('should set default only when property is undefined', (done) =>{
-        const state = new TestStateWithDefaults({boolean2: false, object: null})
+      it('should set default only when property is undefined', (done) => {
+        const state = new TestStateWithDefaults({ boolean2: false, object: null })
         expect(state.get('boolean2')).to.be.false
         expect(state.get('object')).to.be.null
         done()
       })
 
-      it('should be able to set non-null value', (done) =>{
+      it('should be able to set non-null value', (done) => {
         const state = new TestStateWithDefaults()
         state.set('none', 'string')
         expect(state.get('none')).to.be.eql('string')
@@ -291,7 +282,7 @@ describe('ReduxClass.class', function () {
           }
         }
         const shouldThrow = () => {
-          const state = new TestStateWithDefaultsAndTypes()
+          new TestStateWithDefaultsAndTypes()
         }
         expect(shouldThrow).to.throw
         done()
@@ -302,14 +293,14 @@ describe('ReduxClass.class', function () {
   describe('initHiddenProperty', () => {
     it('should create hidden property', (done) => {
       class TestClass extends ReduxClass {
-        constructor(...args) {
+        constructor(...args: any[]) {
           super(...args)
-          this.initHiddenProperty('hiddenProperty', true)
+          this._initHiddenProperty('hiddenProperty', true)
         }
       }
       const testObject = new TestClass()
       const descriptor = Object.getOwnPropertyDescriptor(testObject, 'hiddenProperty')
-      expect(descriptor).to.be.deep.equal({ 
+      expect(descriptor).to.be.deep.equal({
         value: true,
         writable: true,
         enumerable: false,

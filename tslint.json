@@ -1,0 +1,83 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "naming-convention": [
+      true,
+      {
+        "type": "default",
+        "format": "camelCase",
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "forbid"
+      },
+      // exclicitly disable the format check only for method toJSON
+      {
+        "type": "method",
+        "filter": "^toJSON$",
+        "format": null
+      },
+      {
+        "type": "functionVariable",
+        "modifiers": [
+          "export",
+          "const"
+        ],
+        "format": "camelCase"
+      },
+      {
+        "type": "member",
+        "modifiers": "private",
+        "leadingUnderscore": "require"
+      },
+      {
+        "type": "class",
+        "format": "PascalCase"
+      },
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape",
+      "avoid-template",
+      "jsx-double"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "linebreak-style": [
+      true,
+      "CRLF"
+    ],
+    "align": [
+      true,
+      "parameters",
+      "statements"
+    ],
+    "files.insertFinalNewline": true,
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "max-line-length": [
+      true,
+      140
+    ],
+    "no-duplicate-variable": true
+  }
+}

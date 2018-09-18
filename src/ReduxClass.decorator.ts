@@ -1,17 +1,25 @@
-import { get } from 'lodash'
-import Logger from 'js-logger'
+import * as Logger from 'js-logger'
 import ReduxClass from './ReduxClass.class'
 
-function searchObjectForNew(state, parentKey = '', statePaths = []) {
-  state.forEachInstance((attr, key, parent) => {
-    const path = parentKey + '.' + key
+type TAction = {
+  type: string
+}
+
+
+export interface TReducer {
+  (state: ReduxClass, action: TAction): ReduxClass
+}
+
+function searchObjectForNew(state: ReduxClass, parentKey = '', statePaths: Array<string> = []) {
+  state.forEachInstance((attr: ReduxClass, key: string) => {
+    const path: string = parentKey + '.' + key
     searchObjectForNew(attr, path, statePaths)
     statePaths.push(path.slice(1))
   })
   return statePaths
 }
 
-function traverseStateForNew(state, paths) {
+function traverseStateForNew(state: ReduxClass, paths?: Array<string>) {
   if (!paths) {
     paths = searchObjectForNew(state)
   }
@@ -33,11 +41,11 @@ function traverseStateForNew(state, paths) {
  * Ensures that reducer is ReduxClass type.
  * @param {reducer method} reducer 
  */
-export function ReduxClassWrapper(reducer) {
+export function ReduxClassWrapper(reducer: TReducer) {
 
   let decorated = decoratedReducer
 
-  function stateReducerHandler(newState) {
+  function stateReducerHandler(newState: ReduxClass): ReduxClass {
     if (!ReduxClass.isReduxClass(newState)) {
       Logger.warn('Reducer should be of ReduxClass type')
     }
@@ -45,12 +53,12 @@ export function ReduxClassWrapper(reducer) {
     return newState
   }
 
-  function decoratedStateReducer(state, action) {
+  function decoratedStateReducer(state: ReduxClass, action: TAction): ReduxClass {
     const newState = reducer(state, action)
     return stateReducerHandler(newState)
   }
 
-  function decoratedReducer(state, action) {
+  function decoratedReducer(state: ReduxClass, action: TAction): ReduxClass {
     const newState = reducer(state, action)
     if (ReduxClass.isReduxClass(state) || ReduxClass.isReduxClass(newState)) {
       stateReducerHandler(newState)
@@ -61,7 +69,7 @@ export function ReduxClassWrapper(reducer) {
     return newState
   }
 
-  return function (state, action) {
+  return function (state: ReduxClass, action: TAction): ReduxClass {
     return decorated(state, action)
   }
 }

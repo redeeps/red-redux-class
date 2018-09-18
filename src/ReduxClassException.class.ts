@@ -1,9 +1,8 @@
-
 export default class ReduxClassException {
-  constructor(error, message = '') {
+  public error = ''
+  public message = ''
+  constructor(error: string, message = '') {
     this.error = error
     this.message = message
   }
-  error = ''
-  message = ''
 }
