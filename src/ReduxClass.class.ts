@@ -14,8 +14,8 @@ export default class ReduxClass extends PureObject implements IReduxClass {
 
 
   ['constructor']: typeof ReduxClass
-  private [NEW_KEY]: boolean
-  private [TYPEOF_KEY]: symbol
+  protected [NEW_KEY]: boolean
+  protected [TYPEOF_KEY]: symbol
 
   /** 
    * If class needs properties of specific type use "types" object to define them.

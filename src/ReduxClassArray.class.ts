@@ -6,17 +6,16 @@ import {
   bindMethods,
   bindPrototype,
 } from './reflection.utils'
+import { PureObject } from './ReduxClass.types';
 // methods to clone
 const immutableMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
 const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
 
 // imitation of array for reducer state
 export default class ReduxClassArray extends ReduxClass {
-  [ARRAY_KEY]: typeof Array
+  protected [ARRAY_KEY]: any[]
 
-  public static privateProperties = [...ReduxClass.privateProperties, ARRAY_KEY]
-
-  public static isReduxClassArray(object: any): boolean {
+  public static isReduxClassArray(object: PureObject): boolean {
     return ReduxClass.isReduxClass(object) && Array.isArray(object[ARRAY_KEY])
   }
 
@@ -113,11 +112,11 @@ export default class ReduxClassArray extends ReduxClass {
     return this
   }
 
-  public isEmpty() {
+  public isEmpty(): boolean {
     return this[ARRAY_KEY].length === 0
   }
 
-  public toJSON() {
+  public toJSON(): any[] {
     return this[ARRAY_KEY]
   }
 }
