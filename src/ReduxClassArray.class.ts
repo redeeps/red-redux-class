@@ -7,25 +7,24 @@ import {
   bindPrototype,
 } from './reflection.utils'
 import { PureObject } from './ReduxClass.types';
+import { IReduxClassArray } from './ReduxClass.interface';
 // methods to clone
 const immutableMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
 const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
 
 // imitation of array for reducer state
-export default class ReduxClassArray extends ReduxClass {
+export default class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   protected [ARRAY_KEY]: any[]
 
   public static isReduxClassArray(object: PureObject): boolean {
     return ReduxClass.isReduxClass(object) && Array.isArray(object[ARRAY_KEY])
   }
 
-  public static types = {}
-
-  public static initialData(initialState: object, attributes = {}) {
+  public static initialData(initialState: any[] | ReduxClassArray, attributes: object = {}) {
     let array // why do we use composition instead of inheritance? couse babel is not able to properly extend bultin objects (also using case specific plugin)
     let state = {}
     if (ReduxClass.isReduxClass(initialState)) {
-      array = [...initialState[ARRAY_KEY]]
+      array = (<ReduxClassArray>initialState).getArray()
       state = {
         ...initialState,
         ...attributes,
@@ -44,7 +43,8 @@ export default class ReduxClassArray extends ReduxClass {
       array,
     }
   }
-  constructor(initialState: = [], attributes) {
+
+  constructor(initialState: any[] | ReduxClassArray, attributes: object = {}) {
     const {
       state,
       array,
@@ -53,7 +53,7 @@ export default class ReduxClassArray extends ReduxClass {
     this.initArray(array)
   }
 
-  public initialize(initialState) {
+  public initialize(initialState: any[] | ReduxClassArray) {
     const {
       state,
       array,
@@ -62,7 +62,7 @@ export default class ReduxClassArray extends ReduxClass {
     super.initialize(state)
   }
 
-  public initArray(_array: Array<Object>) {
+  public initArray(_array: any[]) {
     const arrayType = this.constructor.types[0]
     if (arrayType && arrayType.constructor) {
       _array = _array.map((el) => (el instanceof arrayType) ? el : new arrayType(el))
@@ -70,45 +70,53 @@ export default class ReduxClassArray extends ReduxClass {
     this._initHiddenProperty(ARRAY_KEY, _array)
   }
 
-  public $new() {
-    return new (<typeof ReduxClassArray>this.constructor)(this, null)
-  }
-
-  public get(key: string | number) {
+  public get(key: string | number): any {
     if (parseInt(key.toString()) === key) {
-      return this[ARRAY_KEY][key]
+      return this.getArrayElement(key)
     }
     return this[key]
   }
 
-  public getFullArray() {
+  public getArrayElement(key: number): any {
+    return this[ARRAY_KEY][key]
+  }
+
+  public getArray() {
     return this[ARRAY_KEY]
+  }
+
+  public getFullArray() {
+    return this.getArray()
   }
 
   public getLength() {
     return this[ARRAY_KEY].length
   }
 
-  public set(data, value) {
-    if (data && value && parseInt(data) === data) {
-      // set value of array element
-      const arrayType = this.constructor.types[0]
-      if (arrayType && !(value instanceof arrayType)) {
-        value = new arrayType(value)
-      }
-      this[ARRAY_KEY][data] = value
-      return this
-    }
-    if (ReduxClassArray.isReduxClassArray(data)) {
-      // if data is ReduxClassArray then overwrite $$array
-      this[ARRAY_KEY] = data[ARRAY_KEY]
-    }
-    if (Array.isArray(data)) {
-      this.initArray(data)
+  public set(key: string | number, value: any): ReduxClassArray {
+    const _key: string = key + ''
+    if (parseInt(_key) + '' === _key) {
+      this.setArrayElement(parseInt(_key), value)
       return this
     }
     // rest will be set in ReduxClass
-    super.set(data, value)
+    super.set(_key, value)
+    return this
+  }
+
+  public setArray(_array: any[]): ReduxClassArray {
+    this._shouldBeNew()
+    this[ARRAY_KEY] = _array
+    return this
+  }
+
+  public setArrayElement(key: number, value: any): ReduxClassArray {
+    this._shouldBeNew()
+    const arrayType = this.constructor.types[0]
+    if (arrayType && !(value instanceof arrayType)) {
+      value = new arrayType(value)
+    }
+    this[ARRAY_KEY][key] = value
     return this
   }
 

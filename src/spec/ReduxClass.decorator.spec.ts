@@ -2,8 +2,7 @@ import { expect } from 'chai'
 
 import ReduxClass from '../ReduxClass.class'
 import ReduxClassArray from '../ReduxClassArray.class'
-import ReduxClassWrapper, { privateMethods } from '../ReduxClass.decorator'
-import combineReduxClassReducers from '../combineReduxClassReducers'
+import ReduxClassWrapper, { privateMethods, IReducer, TAction } from '../ReduxClass.decorator'
 
 describe('ReduxClass.decorator', function () {
   it('should set all objects to not new', function (done) {
@@ -27,23 +26,27 @@ describe('ReduxClass.decorator', function () {
 
   it('should be proper state', function (done) {
     const initialState = new ReduxClass({ value: true })
-    const reducer = function(state = initialState) { return state.new()}
+    const reducer = function (state: ReduxClass = initialState): ReduxClass { return state.new() }
     const wrappedReducer = ReduxClassWrapper(reducer)
-    const newState = wrappedReducer()
-    const newState2 = wrappedReducer(newState)
+    const newState = wrappedReducer(initialState, { type: '' })
+    const newState2 = wrappedReducer(newState, { type: '' })
     expect(ReduxClass.isReduxClass(newState)).to.be.true
-    expect(newState.isNew()).to.be.false
+    expect((<ReduxClass>newState).isNew()).to.be.false
     expect(ReduxClass.isReduxClass(newState2)).to.be.true
-    expect(newState2.isNew()).to.be.false
+    expect((<ReduxClass>newState2).isNew()).to.be.false
     done()
   })
 
   it('is simple function', function (done) {
     const initialState = {}
-    const reducer = function(state = initialState) { return state}
+    function reducer(state: object, action: TAction): object
+    function reducer(state: ReduxClass, action: TAction): ReduxClass
+    function reducer(state: object | ReduxClass = initialState, action: TAction): object | ReduxClass {
+      return state
+    }
     const wrappedReducer = ReduxClassWrapper(reducer)
-    const newState = wrappedReducer()
-    const newState2 = wrappedReducer(newState)
+    const newState = wrappedReducer(initialState, { type: '' })
+    const newState2 = wrappedReducer(newState, { type: '' })
     expect(ReduxClass.isReduxClass(newState)).to.be.false
     expect(typeof newState === 'object').to.be.true
     expect(ReduxClass.isReduxClass(newState2)).to.be.false

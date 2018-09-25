@@ -1,15 +1,17 @@
-import { ARRAY_KEY } from "./ReduxClassArray.constants";
+import { ARRAY_KEY } from "./ReduxClass.constants";
 import ReduxClassException from "./ReduxClassException.class";
+import { PureObject } from './ReduxClass.types';
+import ReduxClass from './ReduxClass.class';
 
-export function bindPrototype(prototype: object, key: string, _target: object, needsNew = false) {
+export function bindPrototype(prototype: PureObject, key: string, _target: object, needsNew = false) {
   if (typeof prototype[key] === "function") {
     if (needsNew) {
-      return function () {
-        this.$shouldBeNew();
+      return function (this: ReduxClass) {
+        this._shouldBeNew();
         return prototype[key].apply(this[ARRAY_KEY], arguments);
       };
     }
-    return function () {
+    return function (this: ReduxClass) {
       return prototype[key].apply(this[ARRAY_KEY], arguments);
     };
   }
@@ -21,20 +23,20 @@ export function bindPrototype(prototype: object, key: string, _target: object, n
 
 // Copies the properties from one class to another
 export function bindMethods(
-  _target: Object,
-  _source: Object,
-  keys: Array<string>,
+  target: Function,
+  source: Function,
+  keys: string[],
   needsNew = false,
   method = bindPrototype,
-  exclude = []
+  exclude: any[] = []
 ) {
   for (let key of keys) {
-    if (_source.prototype[key]) {
+    if (source.prototype[key]) {
       if (exclude.indexOf(key) === -1) {
-        let desc = Object.getOwnPropertyDescriptor(_source.prototype, key);
-        Object.defineProperty(_target.prototype, key, {
+        let desc = Object.getOwnPropertyDescriptor(source.prototype, key);
+        Object.defineProperty(target.prototype, key, {
           ...desc,
-          value: method(_source.prototype, key, _target, needsNew)
+          value: method(source.prototype, key, target, needsNew)
         });
       }
     }

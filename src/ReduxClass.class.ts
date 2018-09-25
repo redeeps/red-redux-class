@@ -28,15 +28,15 @@ export default class ReduxClass extends PureObject implements IReduxClass {
    *       number: 'number',
    *     }
    */
-  static defaults = {} as { [index: string]: any }
-  static types = {} as { [index: string]: any }
+  static defaults: PureObject = {}
+  static types: PureObject = {}
 
   /**
    * Check if provided variable is a reduxClass object
    * @param {any} object 
    */
   static isReduxClass(object: object): boolean {
-    const _object = object as { [index: string]: any }
+    const _object: PureObject = object
     return typeof object === 'object' && object !== null && _object[TYPEOF_KEY] === ReduxClassSymbol
   }
 
@@ -44,7 +44,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     const classConstructor = this
     return (props: object, propName: string, componentName: string) => {
       componentName = componentName || 'ANONYMOUS'
-      const _props = props as { [index: string]: any }
+      const _props: PureObject = props
       if (!(_props[propName] instanceof classConstructor)) {
         return new Error(propName + ' in ' + componentName + " should be instanceof " + classConstructor.toString())
       }
@@ -108,7 +108,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     })
   }
 
-  protected _shouldBeNew(): void {
+  public _shouldBeNew(): void { // public just for bind utils compatibility
     if (!this.isNew()) {
       throw new ReduxClassException('Set on not new', 'Create new object to set attributes')
     }
@@ -242,7 +242,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
   }
 
   public setData(data: object): ReduxClass {
-    const _data = data as { [index: string]: any }
+    const _data: PureObject = data
     this._shouldBeNew()
     Object.keys(data).forEach((key: string) => {
       this._setAttr(key, _data[key])
