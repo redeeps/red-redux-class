@@ -1,5 +1,3 @@
-import { __generator } from '../node_modules/tslib';
-
 export interface IForEachInstanceCallback {
   (attr: any, key: string, self: IReduxClass): void
 }

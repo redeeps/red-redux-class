@@ -54,16 +54,6 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     }
   }
 
-  constructor(initialState: object | ReduxClass = {}) {
-    super()
-    this._initType()
-    this._initNew()
-    this._initialize(initialState)
-    this._initDefaults()
-  }
-
-
-
   /**
    * Inits $$new variable which determines if object is new and can be changed during redux cycles
    * If object is not new, this.set will throw error
@@ -108,14 +98,17 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     })
   }
 
-  public _shouldBeNew(): void { // public just for bind utils compatibility
-    if (!this.isNew()) {
-      throw new ReduxClassException('Set on not new', 'Create new object to set attributes')
-    }
+  constructor(initialState: object | ReduxClass = {}) {
+    super()
+    this._initNew()
+    this._initType()
+    this._initialize(initialState)
+    this._initDefaults()
   }
 
-  protected _new(): ReduxClass {
-    return new (<any>this.constructor)(this)
+
+  protected _new(this: ReduxClass): ReduxClass {
+    return new this.constructor(this)
   }
 
 
@@ -151,6 +144,11 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     return this
   }
 
+  public _shouldBeNew(): void { // public just for bind utils compatibility
+    if (!this.isNew()) {
+      throw new ReduxClassException('Set on not new', 'Create new object to set attributes')
+    }
+  }
   /**
    * Iterate all properties of ReduxClass type and call callback method
    * @param {function} callback 
@@ -189,7 +187,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
       if (newPath === '') {
         // return last but create new if is instance of ReduxClass
         const newChild = child.getNew()
-        newSelf._setAttr(childPath, newChild)
+        newSelf.set(childPath, newChild)
         return <ReduxClass[]>[
           newSelf.get(childPath), //target
           newSelf, //root
@@ -197,7 +195,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
         ]
       }
       const [target, root, ...otherTargets] = child.newPath(newPath)
-      newSelf._setAttr(childPath, root)
+      newSelf.set(childPath, root)
       return <ReduxClass[]>[
         target, //target
         newSelf, //root

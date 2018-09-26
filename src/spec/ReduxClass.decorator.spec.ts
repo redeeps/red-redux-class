@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import ReduxClass from '../ReduxClass.class'
 import ReduxClassArray from '../ReduxClassArray.class'
-import ReduxClassWrapper, { privateMethods, IReducer, TAction } from '../ReduxClass.decorator'
+import ReduxClassWrapper, { privateMethods, TAction } from '../ReduxClass.decorator'
 
 describe('ReduxClass.decorator', function () {
   it('should set all objects to not new', function (done) {
@@ -26,8 +26,13 @@ describe('ReduxClass.decorator', function () {
 
   it('should be proper state', function (done) {
     const initialState = new ReduxClass({ value: true })
-    const reducer = function (state: ReduxClass = initialState): ReduxClass { return state.new() }
-    const wrappedReducer = ReduxClassWrapper(reducer)
+    const reducer = function (state: ReduxClass = initialState, action: TAction): ReduxClass {
+      if (action) {
+        return state.new()
+      }
+      return state.new()
+    }
+    const wrappedReducer = ReduxClassWrapper<ReduxClass>(reducer)
     const newState = wrappedReducer(initialState, { type: '' })
     const newState2 = wrappedReducer(newState, { type: '' })
     expect(ReduxClass.isReduxClass(newState)).to.be.true
@@ -39,9 +44,10 @@ describe('ReduxClass.decorator', function () {
 
   it('is simple function', function (done) {
     const initialState = {}
-    function reducer(state: object, action: TAction): object
-    function reducer(state: ReduxClass, action: TAction): ReduxClass
-    function reducer(state: object | ReduxClass = initialState, action: TAction): object | ReduxClass {
+    function reducer(state: object = initialState, action: TAction): object {
+      if (action) {
+        return state
+      }
       return state
     }
     const wrappedReducer = ReduxClassWrapper(reducer)

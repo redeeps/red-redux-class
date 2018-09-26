@@ -1,18 +1,19 @@
 import { expect } from 'chai'
 
 
-import { ARRAY_KEY } from '../ReduxClassArray.constants'
+
 import ReduxClassArray from '../ReduxClassArray.class'
 import ReduxClass from '../ReduxClass.class'
 import { privateMethods } from '../ReduxClass.decorator'
+import { ARRAY_KEY } from '../ReduxClass.constants';
 
 const { traverseStateForNew } = privateMethods
 
 describe('ReduxClassArray.class', function () {
 
   const needsNewMethods = ["pop", "push", "shift", "unshift", "reverse", "copyWithin", "fill", "sort"]
-  const needsConstructorMethods = ["slice", "filter", "map"]
-  const needsConstructorAndNewMethods = ["splice"]
+  // const needsConstructorMethods = ["slice", "filter", "map"]
+  // const needsConstructorAndNewMethods = ["splice"]
   describe('Object tree', () => {
 
     class ReducerTest extends ReduxClass {
@@ -123,7 +124,7 @@ describe('ReduxClassArray.class', function () {
         test2: ReducerTest2,
       }
     }
-    describe('init', (done) => {
+    describe('init', () => {
       it('should use array type when setting one item', (done) => {
         const testArray = new TestArray()
         testArray.set("0", {})
@@ -154,10 +155,10 @@ describe('ReduxClassArray.class', function () {
       })
     })
 
-    describe('set', (done) => {
+    describe('set', () => {
       it('should use array type when setting array', (done) => {
         const testArray = new TestArray()
-        testArray.set([{ test1: 'test1' }, { test2: 'test2' }])
+        testArray.setArray([{ test1: 'test1' }, { test2: 'test2' }])
         expect(testArray.getLength()).to.be.eql(2)
         expect(testArray.get('0') instanceof ReducerArrayElement).to.be.true
         expect(testArray.get('1') instanceof ReducerArrayElement).to.be.true
@@ -165,39 +166,28 @@ describe('ReduxClassArray.class', function () {
         expect(!!testArray[0]).to.be.false
         done()
       })
-  
+
       it('should use array type when initializing array', (done) => {
         const testArray = new TestArray()
-        testArray.set({ test1: 'test1', test2: 'test2' })
+        testArray.setData({ test1: 'test1', test2: 'test2' })
         expect(testArray.getLength()).to.be.eql(0)
         expect(testArray.get('test1') instanceof ReducerTest1).to.be.true
         expect(testArray.get('test2') instanceof ReducerTest2).to.be.true
         done()
       })
-  
+
       it('should use ReduxClassArray to set all data', (done) => {
         const testArray = new TestArray()
-        testArray.set({ test1: 'test1', test2: 'test2' })
+        testArray.setData({ test1: 'test1', test2: 'test2' })
         expect(testArray.getLength()).to.be.eql(0)
         expect(testArray.get('test1') instanceof ReducerTest1).to.be.true
         expect(testArray.get('test2') instanceof ReducerTest2).to.be.true
         done()
       })
-    })    
-  })
-
-  describe('privateProperties', () => {
-    it('should have proper private properties', (done) => {
-      const privateProperties = ReduxClassArray.privateProperties
-      expect(privateProperties.indexOf('$$new')).to.not.be.equal(-1)
-      expect(privateProperties.indexOf('$$typeof')).to.not.be.equal(-1)
-      expect(privateProperties.indexOf('$$array')).to.not.be.equal(-1)
-      done()
     })
   })
 
-
-  describe('new', (done) => {
+  describe('new', () => {
     class ReducerTest1 extends ReduxClass { }
     class ReducerTest2 extends ReduxClass { }
     class ReducerArrayElement extends ReduxClass {
@@ -230,9 +220,9 @@ describe('ReduxClassArray.class', function () {
       })
       traverseStateForNew(reducer)
       const newReducer = reducer.new()
-      const x1 = newReducer.new('arr.0.attr1')
+      const x1 = newReducer.newPath('arr.0.attr1')
       expect(x1[1]).to.be.eql(newReducer)
-      const x2 = newReducer.new('arr.0.attr2')
+      const x2 = newReducer.newPath('arr.0.attr2')
       expect(x2[1].getPath('arr.0') == newReducer.getPath('arr.0')).to.be.true
       expect(x2[1].getPath('arr.0.attr1') == x1[1].getPath('arr.0.attr1')).to.be.true
       expect(x2[1].getPath('arr.0.attr1') == newReducer.getPath('arr.0.attr1')).to.be.true
@@ -268,11 +258,11 @@ describe('ReduxClassArray.class', function () {
         ])
       })
       traverseStateForNew(reducer)
-      const x1 = reducer.new('arr.0.attr1')
+      const x1 = reducer.newPath('arr.0.attr1')
       expect(x1[1].getPath('arr').isNew()).to.be.true
       expect(x1[1].getPath('arr.0').isNew()).to.be.true
       expect(x1[1].getPath('arr.0.attr1').isNew()).to.be.true
-      const x2 = x1[1].new('arr.0.attr1')
+      const x2 = x1[1].newPath('arr.0.attr1')
       expect(x1[0] == x2[0]).to.be.true
       done()
     })
@@ -287,7 +277,7 @@ describe('ReduxClassArray.class', function () {
         ]),
       })
       traverseStateForNew(reducer)
-      const x1 = reducer.new('arr.0.attr1')
+      const x1 = reducer.newPath('arr.0.attr1')
       expect(x1[2] == x1[1].getPath('arr')).to.be.true
       expect(x1[3] == x1[1].getPath('arr.0')).to.be.true
       expect(x1[4] == x1[1].getPath('arr.0.attr1')).to.be.true
@@ -296,7 +286,7 @@ describe('ReduxClassArray.class', function () {
   })
 
 
-  describe('getPath', (done) => {
+  describe('getPath', () => {
     class ReducerTest1 extends ReduxClass { }
     class ReducerTest2 extends ReduxClass { }
     class ReducerArrayElement extends ReduxClass {
@@ -420,10 +410,10 @@ describe('ReduxClassArray.class', function () {
   it('methods should return new array', function (done) {
     const state = new ReduxClassArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     state.$setNotNew()
-    const arr1 = state.filter((val) => val <= 5)
+    const arr1 = state.filter((val: number) => val <= 5)
     expect(arr1).to.be.eql([1, 2, 3, 4, 5])
 
-    const arr2 = state.map((val) => val + 1)
+    const arr2 = state.map((val: number) => val + 1)
     expect(arr2).to.be.eql([2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
 
     const arr3 = state.slice(0, 5)
@@ -468,7 +458,7 @@ describe('ReduxClassArray.class', function () {
     state.inner1.$setNotNew()
     state.inner1.get(0).$setNotNew()
     state.inner1.get(0).inner3.$setNotNew()
-    const [target, root] = state.new('inner1.0.inner3')
+    const [target, root] = state.newPath('inner1.0.inner3')
     expect(root.isNew()).to.be.true
     expect(root.inner1.isNew()).to.be.true
     expect(root.inner1.get(0).isNew()).to.be.true
@@ -489,13 +479,13 @@ describe('ReduxClassArray.class', function () {
       done()
     })
     it('should return false if array has more elements', (done) => {
-      const arr = new ReduxClassArray([1,2,3])
+      const arr = new ReduxClassArray([1, 2, 3])
       expect(arr.isEmpty()).to.be.false
       done()
     })
   })
 
-  describe('toJSON', (done) => {
+  describe('toJSON', () => {
     it('should show array class as array', (done) => {
       const state = new ReduxClassArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
       expect(JSON.stringify(state)).to.be.equal('[1,2,3,4,5,6,7,8,9,10]')

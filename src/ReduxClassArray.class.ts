@@ -16,8 +16,9 @@ const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithi
 export default class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   protected [ARRAY_KEY]: any[]
 
-  public static isReduxClassArray(object: PureObject): boolean {
-    return ReduxClass.isReduxClass(object) && Array.isArray(object[ARRAY_KEY])
+  public static isReduxClassArray(object: object): boolean {
+    const _object: PureObject = object
+    return ReduxClass.isReduxClass(_object) && Array.isArray(_object[ARRAY_KEY])
   }
 
   public static initialData(initialState: any[] | ReduxClassArray, attributes: object = {}) {
@@ -44,7 +45,7 @@ export default class ReduxClassArray extends ReduxClass implements IReduxClassAr
     }
   }
 
-  constructor(initialState: any[] | ReduxClassArray, attributes: object = {}) {
+  constructor(initialState: any[] | ReduxClassArray = [], attributes: object = {}) {
     const {
       state,
       array,
@@ -71,8 +72,8 @@ export default class ReduxClassArray extends ReduxClass implements IReduxClassAr
   }
 
   public get(key: string | number): any {
-    if (parseInt(key.toString()) === key) {
-      return this.getArrayElement(key)
+    if (typeof key === 'number' || parseInt(key.toString()).toString() === key) {
+      return this.getArrayElement(<number>key)
     }
     return this[key]
   }
@@ -106,7 +107,13 @@ export default class ReduxClassArray extends ReduxClass implements IReduxClassAr
 
   public setArray(_array: any[]): ReduxClassArray {
     this._shouldBeNew()
-    this[ARRAY_KEY] = _array
+    const arrayType = this.constructor.types[0]
+    this[ARRAY_KEY] = _array.map((value: any): any => {
+      if (arrayType && !(value instanceof arrayType)) {
+        value = new arrayType(value)
+      }
+      return value
+    })
     return this
   }
 
