@@ -1,21 +1,16 @@
-import { IReduxClass, IForEachInstanceCallback } from './ReduxClass.interface'
-import { ReduxClassException } from './ReduxClassException.class'
-import { ReduxClassSymbol } from './ReduxClassSymbol'
+import { IForEachInstanceCallback, IReduxClass } from './ReduxClass.interface'
+import { Validator } from 'prop-types'
 import { PureObject } from './ReduxClass.types'
-import {
-  ARRAY_KEY,
-  NEW_KEY,
-  TYPEOF_KEY
-} from './ReduxClass.constants'
-
+import { ReduxClassException } from './ReduxClassException.class'
+import { REDUX_CLASS_SYMBOL } from './ReduxClassSymbol'
+import { ARRAY_KEY, NEW_KEY, TYPEOF_KEY } from './ReduxClass.constants'
 
 export class ReduxClass extends PureObject implements IReduxClass {
-
-  ['constructor']: typeof ReduxClass
+  public ['constructor']: typeof ReduxClass
   protected [NEW_KEY]: boolean
   protected [TYPEOF_KEY]: symbol
 
-  /** 
+  /**
    * If class needs properties of specific type use "types" object to define them.
    * Classes can be used or primitives types strings: "boolean", "number", "string", "object"
    *     static types = {
@@ -31,25 +26,34 @@ export class ReduxClass extends PureObject implements IReduxClass {
 
   /**
    * Check if provided variable is a reduxClass object
-   * @param {any} object 
+   * @param {any} object
    */
   static isReduxClass(object: object | undefined): boolean {
     if (typeof object === 'undefined') {
       return false
     }
     const _object: PureObject = object
-    return typeof object === 'object' && object !== null && _object[TYPEOF_KEY] === ReduxClassSymbol
+    return (
+      typeof object === 'object' &&
+      object !== null &&
+      _object[TYPEOF_KEY] === REDUX_CLASS_SYMBOL
+    )
   }
 
-  static propType(): Function {
+  static propType(): Validator<object> {
     const classConstructor = this
     return (props: object, propName: string, componentName: string) => {
       componentName = componentName || 'ANONYMOUS'
       const _props: PureObject = props
       if (!(_props[propName] instanceof classConstructor)) {
-        return new Error(propName + ' in ' + componentName + " should be instanceof " + classConstructor.toString())
+        return new Error(
+          propName +
+            ' in ' +
+            componentName +
+            ' should be instanceof ' +
+            classConstructor.toString(),
+        )
       }
-
       // assume all ok
       return null
     }
@@ -67,7 +71,7 @@ export class ReduxClass extends PureObject implements IReduxClass {
    * Is used to check if object is ReduxClass
    */
   protected _initType() {
-    this._initHiddenProperty(TYPEOF_KEY, ReduxClassSymbol)
+    this._initHiddenProperty(TYPEOF_KEY, REDUX_CLASS_SYMBOL)
   }
 
   protected _initialize(initialState: object | IReduxClass) {
@@ -76,15 +80,15 @@ export class ReduxClass extends PureObject implements IReduxClass {
 
   /**
    * Use to create not enumerable properties
-   * @param {string} key 
-   * @param {*} value 
+   * @param {string} key
+   * @param {*} value
    */
   protected _initHiddenProperty(key: string, value: any) {
     Object.defineProperty(this, key, {
-      value: value,
-      enumerable: false,
-      writable: true,
       configurable: false,
+      enumerable: false,
+      value,
+      writable: true,
     })
   }
   /**
@@ -107,11 +111,9 @@ export class ReduxClass extends PureObject implements IReduxClass {
     this._initDefaults()
   }
 
-
   protected _new(this: ReduxClass): ReduxClass {
     return new this.constructor(this)
   }
-
 
   protected _setAttr(key: string, value: any): ReduxClass {
     const types = this.constructor.types
@@ -121,38 +123,53 @@ export class ReduxClass extends PureObject implements IReduxClass {
     }
     if (typeof types[key] === 'string') {
       if (typeof value !== types[key]) {
-        throw new ReduxClassException('Bad value type', `Value type should be as set in static types property: '${key}'@${this.constructor.name} = ${this.constructor.types[key]}`)
+        throw new ReduxClassException(
+          'Bad value type',
+          `Value type should be as set in static types property: '${key}'@${
+            this.constructor.name
+          } = ${this.constructor.types[key]}`,
+        )
       }
     } else if (types[key] && !(value instanceof types[key])) {
       value = new types[key](value)
     }
     // specific key
     // default value
-    if (types['_'] && !types[key] && !(value instanceof types['_'])) {
-      value = new types['_'](value)
+    if (types._ && !types[key] && !(value instanceof types._)) {
+      value = new types._(value)
     }
 
     const oldValue = this.get(key)
-    if (typeof oldValue !== typeof value &&
+    if (
+      typeof oldValue !== typeof value &&
       oldValue !== undefined &&
       oldValue !== null &&
       value !== undefined &&
       value !== null
     ) {
-      throw new ReduxClassException('Bad value type', `Value type should be the same as previous value: '${key}'@${this.constructor.name}`)
+      throw new ReduxClassException(
+        'Bad value type',
+        `Value type should be the same as previous value: '${key}'@${
+          this.constructor.name
+        }`,
+      )
     }
     this[key] = value
     return this
   }
 
-  public _shouldBeNew(): void { // public just for bind utils compatibility
+  public _shouldBeNew(): void {
+    // public just for bind utils compatibility
     if (!this.isNew()) {
-      throw new ReduxClassException('Set on not new', 'Create new object to set attributes')
+      throw new ReduxClassException(
+        'Set on not new',
+        'Create new object to set attributes',
+      )
     }
   }
   /**
    * Iterate all properties of ReduxClass type and call callback method
-   * @param {function} callback 
+   * @param {function} callback
    * @throws {ReduxClassException} Callback must be a function
    */
   public forEachInstance(callback: IForEachInstanceCallback): void {
@@ -160,8 +177,7 @@ export class ReduxClass extends PureObject implements IReduxClass {
     keys.forEach((key: string) => {
       const attr = this.get(key)
       if (ReduxClass.isReduxClass(attr)) {
-        const self = this
-        callback(attr, key, self)
+        callback(attr, key, this)
       }
     })
   }
@@ -177,10 +193,15 @@ export class ReduxClass extends PureObject implements IReduxClass {
     // has some path
     const pathParts = path.split('.')
     // if we have objects to traverse
-    const childPath = <string>pathParts[0]
-    const child = <ReduxClass>this.get(childPath)
+    const childPath = pathParts[0] as string
+    const child = this.get(childPath) as ReduxClass
     if (child === undefined) {
-      throw new ReduxClassException('Target class doesn\'t exist', `Please make sure target object exists: '${path}'@${this.constructor.name}`)
+      throw new ReduxClassException(
+        "Target class doesn't exist",
+        `Please make sure target object exists: '${path}'@${
+          this.constructor.name
+        }`,
+      )
     }
     if (ReduxClass.isReduxClass(child)) {
       const newSelf = this.getNew()
@@ -189,22 +210,27 @@ export class ReduxClass extends PureObject implements IReduxClass {
         // return last but create new if is instance of ReduxClass
         const newChild = child.getNew()
         newSelf.set(childPath, newChild)
-        return <ReduxClass[]>[
-          newSelf.get(childPath), //target
-          newSelf, //root
+        return [
+          newSelf.get(childPath), // target
+          newSelf, // root
           newSelf.get(childPath),
-        ]
+        ] as ReduxClass[]
       }
       const [target, root, ...otherTargets] = child.newPath(newPath)
       newSelf.set(childPath, root)
-      return <ReduxClass[]>[
-        target, //target
-        newSelf, //root
+      return [
+        target, // target
+        newSelf, // root
         newSelf.get(childPath),
         ...otherTargets,
-      ]
+      ] as ReduxClass[]
     } else {
-      throw new ReduxClassException('Target class is not ReduxClass', `Please make sure target object exists: '${path}'@${this.constructor.name}`)
+      throw new ReduxClassException(
+        'Target class is not ReduxClass',
+        `Please make sure target object exists: '${path}'@${
+          this.constructor.name
+        }`,
+      )
     }
   }
 
@@ -220,16 +246,18 @@ export class ReduxClass extends PureObject implements IReduxClass {
     if (path.indexOf('.') !== -1) {
       const pathArr = path.split('.')
       const pathArrCopy = [...pathArr]
-      return pathArr.reduce((accumulator) => accumulator.get(pathArrCopy.shift() || ''), this)
+      return pathArr.reduce(
+        accumulator => accumulator.get(pathArrCopy.shift() || ''),
+        this,
+      )
     }
     const key = path
     return this.get(key)
   }
 
-
   /**
    * @param key Throws Error
-   * @param value 
+   * @param value
    */
   public set(key: string, value: any): ReduxClass {
     this._shouldBeNew()
@@ -257,7 +285,7 @@ export class ReduxClass extends PureObject implements IReduxClass {
     this[NEW_KEY] = false
   }
 
-  public $getType(): Symbol {
+  public $getType(): symbol {
     return this[TYPEOF_KEY]
   }
 }

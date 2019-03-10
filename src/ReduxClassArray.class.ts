@@ -1,16 +1,42 @@
 import { ReduxClass } from './ReduxClass.class'
-import {
-  ARRAY_KEY,
-} from './ReduxClass.constants'
-import {
-  bindMethods,
-  bindPrototype,
-} from './reflection.utils'
-import { PureObject } from './ReduxClass.types';
-import { IReduxClassArray } from './ReduxClass.interface';
+import { ARRAY_KEY } from './ReduxClass.constants'
+import { bindMethods, bindPrototype } from './reflection.utils'
+import { PureObject } from './ReduxClass.types'
+import { IReduxClassArray } from './ReduxClass.interface'
 // methods to clone
-const immutableMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', 'every', 'some', 'reduce', 'reduceRight', 'toString', 'toLocaleString', 'join', 'reverse', 'lastIndexOf', 'find', 'findIndex', 'values', 'slice', 'filter', 'map']
-const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
+const immutableMethods = [
+  'includes',
+  'indexOf',
+  'keys',
+  'entries',
+  'forEach',
+  'every',
+  'some',
+  'reduce',
+  'reduceRight',
+  'toString',
+  'toLocaleString',
+  'join',
+  'reverse',
+  'lastIndexOf',
+  'find',
+  'findIndex',
+  'values',
+  'slice',
+  'filter',
+  'map',
+]
+const mutableMethods = [
+  'pop',
+  'push',
+  'shift',
+  'unshift',
+  'reverse',
+  'copyWithin',
+  'fill',
+  'sort',
+  'splice',
+]
 
 // imitation of array for reducer state
 export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
@@ -21,11 +47,16 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
     return ReduxClass.isReduxClass(_object) && Array.isArray(_object[ARRAY_KEY])
   }
 
-  public static initialData(initialState: any[] | ReduxClassArray, attributes: object = {}) {
-    let array // why do we use composition instead of inheritance? couse babel is not able to properly extend bultin objects (also using case specific plugin)
+  public static initialData(
+    initialState: any[] | ReduxClassArray,
+    attributes: object = {},
+  ) {
+    // why do we use composition instead of inheritance?
+    // couse babel is not able to properly extend bultin objects (also using case specific plugin)
+    let array
     let state = {}
     if (ReduxClass.isReduxClass(initialState)) {
-      array = (<ReduxClassArray>initialState).getArray()
+      array = (initialState as ReduxClassArray).getArray()
       state = {
         ...initialState,
         ...attributes,
@@ -40,25 +71,25 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
       state = initialState
     }
     return {
-      state,
       array,
+      state,
     }
   }
 
-  constructor(initialState: any[] | ReduxClassArray = [], attributes: object = {}) {
-    const {
-      state,
-      array,
-    } = ReduxClassArray.initialData(initialState, attributes)
+  constructor(
+    initialState: any[] | ReduxClassArray = [],
+    attributes: object = {},
+  ) {
+    const { state, array } = ReduxClassArray.initialData(
+      initialState,
+      attributes,
+    )
     super(state)
     this.initArray(array)
   }
 
   public initialize(initialState: any[] | ReduxClassArray) {
-    const {
-      state,
-      array,
-    } = ReduxClassArray.initialData(initialState)
+    const { state, array } = ReduxClassArray.initialData(initialState)
     this.set(ARRAY_KEY, array)
     super.initialize(state)
   }
@@ -66,14 +97,19 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   public initArray(_array: any[]) {
     const arrayType = this.constructor.types[0]
     if (arrayType && arrayType.constructor) {
-      _array = _array.map((el) => (el instanceof arrayType) ? el : new arrayType(el))
+      _array = _array.map(el =>
+        el instanceof arrayType ? el : new arrayType(el),
+      )
     }
     this._initHiddenProperty(ARRAY_KEY, _array)
   }
 
   public get(key: string | number): any {
-    if (typeof key === 'number' || parseInt(key.toString()).toString() === key) {
-      return this.getArrayElement(<number>key)
+    if (
+      typeof key === 'number' ||
+      parseInt(key.toString(), 10).toString() === key
+    ) {
+      return this.getArrayElement(key as number)
     }
     return this[key]
   }
@@ -96,8 +132,8 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
 
   public set(key: string | number, value: any): ReduxClassArray {
     const _key: string = key + ''
-    if (parseInt(_key) + '' === _key) {
-      this.setArrayElement(parseInt(_key), value)
+    if (parseInt(_key, 10) + '' === _key) {
+      this.setArrayElement(parseInt(_key, 10), value)
       return this
     }
     // rest will be set in ReduxClass
@@ -108,12 +144,14 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   public setArray(_array: any[]): ReduxClassArray {
     this._shouldBeNew()
     const arrayType = this.constructor.types[0]
-    this[ARRAY_KEY] = _array.map((value: any): any => {
-      if (arrayType && !(value instanceof arrayType)) {
-        value = new arrayType(value)
-      }
-      return value
-    })
+    this[ARRAY_KEY] = _array.map(
+      (value: any): any => {
+        if (arrayType && !(value instanceof arrayType)) {
+          value = new arrayType(value)
+        }
+        return value
+      },
+    )
     return this
   }
 

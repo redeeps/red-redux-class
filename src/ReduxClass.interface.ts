@@ -1,6 +1,8 @@
-export interface IForEachInstanceCallback {
-  (attr: any, key: string, self: IReduxClass): void
-}
+export type IForEachInstanceCallback = (
+  attr: any,
+  key: string,
+  self: IReduxClass,
+) => void
 
 export interface IReduxClass {
   forEachInstance(callback: IForEachInstanceCallback): void

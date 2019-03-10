@@ -1,4 +1,13 @@
-trailingComma: "es5"
-tabWidth: 2
-semi: false
-singleQuote: true
+{
+  "useTabs": false,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "semi": false,
+  "trailingComma": "all",
+
+  "jsxBracketSameLine": false,
+
+  "noSemi": true,
+  "rcVerbose": true
+}

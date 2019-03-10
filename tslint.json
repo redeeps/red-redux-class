@@ -1,40 +1,6 @@
 {
-  "extends": [
-    "tslint:latest",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
-    "naming-convention": [
-      true,
-      {
-        "type": "default",
-        "format": "camelCase",
-        "leadingUnderscore": "allow",
-        "trailingUnderscore": "forbid"
-      },
-      {
-        "type": "method",
-        "filter": "^toJSON$",
-        "format": null
-      },
-      {
-        "type": "functionVariable",
-        "modifiers": [
-          "export",
-          "const"
-        ],
-        "format": "camelCase"
-      },
-      {
-        "type": "member",
-        "modifiers": "private",
-        "leadingUnderscore": "require"
-      },
-      {
-        "type": "class",
-        "format": "PascalCase"
-      },
-    ],
     "quotemark": [
       true,
       "single",
@@ -48,20 +14,9 @@
       "check-format",
       "allow-leading-underscore"
     ],
-    "linebreak-style": [
-      true,
-      "CRLF"
-    ],
-    "align": [
-      true,
-      "parameters",
-      "statements"
-    ],
-    "files.insertFinalNewline": true,
-    "semicolon": [
-      true,
-      "never"
-    ],
+    "linebreak-style": [true, "CRLF"],
+    "align": [true, "parameters", "statements"],
+    "semicolon": [true, "never"],
     "trailing-comma": [
       true,
       {
@@ -69,14 +24,17 @@
         "singleline": "never"
       }
     ],
-    "indent": [
-      true,
-      "spaces"
-    ],
-    "max-line-length": [
-      true,
-      140
-    ],
-    "no-duplicate-variable": true
+    "indent": [true, "spaces"],
+    "max-line-length": [true, 140],
+    "no-duplicate-variable": true,
+    "ordered-imports": false,
+    "member-access": false,
+    "member-ordering": false,
+    "no-implicit-dependencies": false,
+    "no-var-self": false,
+    "no-this-assignment": false
+  },
+  "linterOptions": {
+    "exclude": ["node_modules", "./**/spec/*"]
   }
 }
