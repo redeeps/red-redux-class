@@ -1,7 +1,6 @@
-import * as Logger from 'js-logger'
 import { IReduxClass, IForEachInstanceCallback } from './ReduxClass.interface'
-import ReduxClassException from './ReduxClassException.class'
-import ReduxClassSymbol from './ReduxClassSymbol'
+import { ReduxClassException } from './ReduxClassException.class'
+import { ReduxClassSymbol } from './ReduxClassSymbol'
 import { PureObject } from './ReduxClass.types'
 import {
   ARRAY_KEY,
@@ -10,8 +9,7 @@ import {
 } from './ReduxClass.constants'
 
 
-export default class ReduxClass extends PureObject implements IReduxClass {
-
+export class ReduxClass extends PureObject implements IReduxClass {
 
   ['constructor']: typeof ReduxClass
   protected [NEW_KEY]: boolean
@@ -35,7 +33,10 @@ export default class ReduxClass extends PureObject implements IReduxClass {
    * Check if provided variable is a reduxClass object
    * @param {any} object 
    */
-  static isReduxClass(object: object): boolean {
+  static isReduxClass(object: object | undefined): boolean {
+    if (typeof object === 'undefined') {
+      return false
+    }
     const _object: PureObject = object
     return typeof object === 'object' && object !== null && _object[TYPEOF_KEY] === ReduxClassSymbol
   }
@@ -219,11 +220,7 @@ export default class ReduxClass extends PureObject implements IReduxClass {
     if (path.indexOf('.') !== -1) {
       const pathArr = path.split('.')
       const pathArrCopy = [...pathArr]
-      try {
-        return pathArr.reduce((accumulator) => accumulator.get(pathArrCopy.shift() || ''), this)
-      } catch (error) {
-        Logger.warn(error)
-      }
+      return pathArr.reduce((accumulator) => accumulator.get(pathArrCopy.shift() || ''), this)
     }
     const key = path
     return this.get(key)

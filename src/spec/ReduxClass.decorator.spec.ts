@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 
-import ReduxClass from '../ReduxClass.class'
-import ReduxClassArray from '../ReduxClassArray.class'
-import ReduxClassWrapper, { privateMethods, TAction } from '../ReduxClass.decorator'
+import { ReduxClass } from '../ReduxClass.class'
+import { ReduxClassArray } from '../ReduxClassArray.class'
+import { ReduxClassWrapper, privateMethods, TAction } from '../ReduxClass.decorator'
 
 describe('ReduxClass.decorator', function () {
   it('should set all objects to not new', function (done) {

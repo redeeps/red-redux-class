@@ -1,4 +1,4 @@
-import ReduxClass from './ReduxClass.class'
+import { ReduxClass } from './ReduxClass.class'
 import {
   ARRAY_KEY,
 } from './ReduxClass.constants'
@@ -13,7 +13,7 @@ const immutableMethods = ['includes', 'indexOf', 'keys', 'entries', 'forEach', '
 const mutableMethods = ['pop', 'push', 'shift', 'unshift', 'reverse', 'copyWithin', 'fill', 'sort', 'splice']
 
 // imitation of array for reducer state
-export default class ReduxClassArray extends ReduxClass implements IReduxClassArray {
+export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   protected [ARRAY_KEY]: any[]
 
   public static isReduxClassArray(object: object): boolean {

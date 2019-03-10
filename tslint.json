@@ -12,7 +12,6 @@
         "leadingUnderscore": "allow",
         "trailingUnderscore": "forbid"
       },
-      // exclicitly disable the format check only for method toJSON
       {
         "type": "method",
         "filter": "^toJSON$",

@@ -1,4 +1,4 @@
-export default class ReduxClassException {
+export class ReduxClassException {
   public error = ''
   public message = ''
   constructor(error: string, message = '') {

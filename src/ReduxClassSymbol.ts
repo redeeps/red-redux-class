@@ -3,5 +3,4 @@
 const REDUX_CLASS_NAME = 'redux-class.class'
 const SYMBOL_TARGET = 'for'
 const REDUX_CLASS_TYPE: symbol = Symbol[SYMBOL_TARGET](REDUX_CLASS_NAME)
-
-export default REDUX_CLASS_TYPE
+export const ReduxClassSymbol = REDUX_CLASS_TYPE

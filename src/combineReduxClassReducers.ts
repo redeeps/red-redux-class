@@ -1,9 +1,9 @@
-import { combineReducers } from 'redux'
-import ReduxClassWrapper, { CombinedReducers } from './ReduxClass.decorator'
+import { combineReducers, ReducersMapObject } from 'redux'
+import { ReduxClassWrapper } from './ReduxClass.decorator'
 
-export default function combineReduxClassReducers(reducers: CombinedReducers) {
+export function combineReduxClassReducers(reducers: ReducersMapObject) {
   const reducersKeys = Object.keys(reducers)
-  const wrappedReducers: CombinedReducers = {}
+  const wrappedReducers: ReducersMapObject = {}
   for (let i = 0; i < reducersKeys.length; i++) {
     const reducerKey = reducersKeys[i]
     const reducer = reducers[reducerKey]

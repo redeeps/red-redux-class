@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import ReduxClass from '../ReduxClass.class'
+import { ReduxClass } from '../ReduxClass.class'
 
 describe('ReduxClass.class', function () {
 

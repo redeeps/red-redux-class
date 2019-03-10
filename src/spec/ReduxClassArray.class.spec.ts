@@ -1,9 +1,7 @@
 import { expect } from 'chai'
 
-
-
-import ReduxClassArray from '../ReduxClassArray.class'
-import ReduxClass from '../ReduxClass.class'
+import { ReduxClassArray } from '../ReduxClassArray.class'
+import { ReduxClass } from '../ReduxClass.class'
 import { privateMethods } from '../ReduxClass.decorator'
 import { ARRAY_KEY } from '../ReduxClass.constants';
 

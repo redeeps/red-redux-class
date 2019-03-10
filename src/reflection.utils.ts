@@ -1,7 +1,7 @@
 import { ARRAY_KEY } from "./ReduxClass.constants";
-import ReduxClassException from "./ReduxClassException.class";
+import { ReduxClassException } from "./ReduxClassException.class";
 import { PureObject } from './ReduxClass.types';
-import ReduxClass from './ReduxClass.class';
+import { ReduxClass } from './ReduxClass.class';
 
 export function bindPrototype(prototype: PureObject, key: string, _target: object, needsNew = false) {
   if (typeof prototype[key] === "function") {
