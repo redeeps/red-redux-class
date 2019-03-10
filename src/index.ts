@@ -9,7 +9,7 @@ export {
   ReduxClass,
   ReduxClassArray,
   ReduxClassArrayConstants,
-  REDUX_CLASS_SYMBOL as REDUX_CLASS_TYPE,
+  REDUX_CLASS_SYMBOL,
   ReduxClassWrapper,
   combineReduxClassReducers,
 }
