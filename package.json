@@ -45,6 +45,14 @@
   "dependencies": {
     "redux": "^4.0.1"
   },
+  "prettier": {
+    "useTabs": false,
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "semi": false,
+    "singleQuote": true
+  },
   "jest": {
     "testRegex": ".*\\.test\\.ts",
     "transform": {

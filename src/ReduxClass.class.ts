@@ -1,5 +1,5 @@
-import { IForEachInstanceCallback, IReduxClass } from './ReduxClass.interface'
 import { Validator } from 'prop-types'
+import { IForEachInstanceCallback, IReduxClass } from './ReduxClass.interface'
 import { PureObject } from './ReduxClass.types'
 import { ReduxClassException } from './ReduxClassException.class'
 import { REDUX_CLASS_SYMBOL } from './ReduxClassSymbol'
@@ -42,12 +42,12 @@ export class ReduxClass extends PureObject implements IReduxClass {
 
   static propType(): Validator<object> {
     const classConstructor = this
-    return (props: object, propName: string, componentName: string) => {
+    return (props: object, key: string, componentName: string) => {
       componentName = componentName || 'ANONYMOUS'
       const _props: PureObject = props
-      if (!(_props[propName] instanceof classConstructor)) {
+      if (!(_props[key] instanceof classConstructor)) {
         return new Error(
-          propName +
+          key +
             ' in ' +
             componentName +
             ' should be instanceof ' +
@@ -247,7 +247,7 @@ export class ReduxClass extends PureObject implements IReduxClass {
       const pathArr = path.split('.')
       const pathArrCopy = [...pathArr]
       return pathArr.reduce(
-        accumulator => accumulator.get(pathArrCopy.shift() || ''),
+        (accumulator) => accumulator.get(pathArrCopy.shift() || ''),
         this,
       )
     }

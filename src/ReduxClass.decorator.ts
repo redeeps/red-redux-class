@@ -1,5 +1,5 @@
-import { ReduxClass } from './ReduxClass.class'
 import { AnyAction, Reducer } from 'redux'
+import { ReduxClass } from './ReduxClass.class'
 
 export type TAction = AnyAction
 
@@ -23,7 +23,7 @@ function traverseStateForNew(state: ReduxClass, paths?: string[]): string[] {
     paths = searchObjectForNew(state)
   }
   state.$setNotNew()
-  paths.forEach(path => {
+  paths.forEach((path) => {
     const target = state.getPath(path)
     target.$setNotNew()
   })

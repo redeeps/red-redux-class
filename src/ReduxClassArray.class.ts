@@ -97,7 +97,7 @@ export class ReduxClassArray extends ReduxClass implements IReduxClassArray {
   public initArray(_array: any[]) {
     const arrayType = this.constructor.types[0]
     if (arrayType && arrayType.constructor) {
-      _array = _array.map(el =>
+      _array = _array.map((el) =>
         el instanceof arrayType ? el : new arrayType(el),
       )
     }
