@@ -31,7 +31,7 @@ Replace redux "combineReducers" with "combineReduxClassReducers" in your reducer
 
 In yourReducer.js file import only a wrapper
 
-    import { ReduxClassWrapper } from 'red-redux-class'    
+    import { ReduxClassWrapper } from 'red-redux-class'
 
     function yourReducer(state = {}, action) {
       ...
@@ -39,7 +39,7 @@ In yourReducer.js file import only a wrapper
 
     export default ReduxClassWrapper(yourReducer)
 
-### Extend your redux object 
+### Extend your redux object
 
 #### File: YourReduxClass.js
 
@@ -65,10 +65,10 @@ In your class file, extend the class with ReduxClass.
 
 #### File: yourReducer.js
 
-Use your YourReduxClass object as initial state for your reducer. 
+Use your YourReduxClass object as initial state for your reducer.
 For every change in state create new state using new().
-  
-    import { ReduxClassWrapper } from 'red-redux-class'    
+
+    import { ReduxClassWrapper } from 'red-redux-class'
     import YourReduxClass from './YourReduxClass'
 
     const initialState = new YourReduxClass({
@@ -86,8 +86,16 @@ For every change in state create new state using new().
     export default ReduxClassWrapper(yourReducer)
 
 ## CHANGELOG
+
+### 1.0.7
+
+- removed dependencies
+
 ### 1.0.6
+
 - update packages
+
 ### 1.0.5
+
 - added initHiddenProperty to easily add hidden properties
 - added toJSON method for array redux class

@@ -31,7 +31,6 @@
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
     "@types/prop-types": "^15.7.0",
-    "@types/redux": "^3.6.0",
     "chai": "^3.5.0",
     "cross-env": "2.0.0",
     "mocha": "^5.2.0",
@@ -51,7 +50,9 @@
     "trailingComma": "all",
     "arrowParens": "always",
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "printWidth": 80,
+    "tabWidth": 2
   },
   "jest": {
     "testRegex": ".*\\.test\\.ts",
