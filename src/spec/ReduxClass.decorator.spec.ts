@@ -1,32 +1,54 @@
-import { expect } from 'chai'
-
 import { ReduxClass } from '../ReduxClass.class'
 import { ReduxClassArray } from '../ReduxClassArray.class'
-import { ReduxClassWrapper, privateMethods, TAction } from '../ReduxClass.decorator'
+import {
+  ReduxClassWrapper,
+  privateMethods,
+  TAction,
+} from '../ReduxClass.decorator'
 
-describe('ReduxClass.decorator', function () {
-  it('should set all objects to not new', function (done) {
+describe('ReduxClass.decorator', function() {
+  it('should set all objects to not new', function(done) {
     const state = new ReduxClass({
-      inner: new ReduxClassArray([
-        new ReduxClass({}),
-        new ReduxClass({}),
-      ]),
+      inner: new ReduxClassArray([new ReduxClass({}), new ReduxClass({})]),
     })
-    expect(state.isNew()).to.be.true
-    expect(state.get('inner').isNew()).to.be.true
-    expect(state.get('inner').get(0).isNew()).to.be.true
-    expect(state.get('inner').get(1).isNew()).to.be.true
+    expect(state.isNew()).toBe(true)
+    expect(state.get('inner').isNew()).toBe(true)
+    expect(
+      state
+        .get('inner')
+        .get(0)
+        .isNew(),
+    ).toBe(true)
+    expect(
+      state
+        .get('inner')
+        .get(1)
+        .isNew(),
+    ).toBe(true)
     privateMethods.traverseStateForNew(state)
-    expect(state.isNew()).to.be.false
-    expect(state.get('inner').isNew()).to.be.false
-    expect(state.get('inner').get(0).isNew()).to.be.false
-    expect(state.get('inner').get(1).isNew()).to.be.false
+    expect(state.isNew()).toBe(false)
+    expect(state.get('inner').isNew()).toBe(false)
+    expect(
+      state
+        .get('inner')
+        .get(0)
+        .isNew(),
+    ).toBe(false)
+    expect(
+      state
+        .get('inner')
+        .get(1)
+        .isNew(),
+    ).toBe(false)
     done()
   })
 
-  it('should be proper state', function (done) {
+  it('should be proper state', function(done) {
     const initialState = new ReduxClass({ value: true })
-    const reducer = function (state: ReduxClass = initialState, action: TAction): ReduxClass {
+    const reducer = function(
+      state: ReduxClass = initialState,
+      action: TAction,
+    ): ReduxClass {
       if (action) {
         return state.new()
       }
@@ -35,14 +57,14 @@ describe('ReduxClass.decorator', function () {
     const wrappedReducer = ReduxClassWrapper<ReduxClass>(reducer)
     const newState = wrappedReducer(initialState, { type: '' })
     const newState2 = wrappedReducer(newState, { type: '' })
-    expect(ReduxClass.isReduxClass(newState)).to.be.true
-    expect((<ReduxClass>newState).isNew()).to.be.false
-    expect(ReduxClass.isReduxClass(newState2)).to.be.true
-    expect((<ReduxClass>newState2).isNew()).to.be.false
+    expect(ReduxClass.isReduxClass(newState)).toBe(true)
+    expect((<ReduxClass>newState).isNew()).toBe(false)
+    expect(ReduxClass.isReduxClass(newState2)).toBe(true)
+    expect((<ReduxClass>newState2).isNew()).toBe(false)
     done()
   })
 
-  it('is simple function', function (done) {
+  it('is simple function', function(done) {
     const initialState = {}
     function reducer(state: object = initialState, action: TAction): object {
       if (action) {
@@ -53,10 +75,10 @@ describe('ReduxClass.decorator', function () {
     const wrappedReducer = ReduxClassWrapper(reducer)
     const newState = wrappedReducer(initialState, { type: '' })
     const newState2 = wrappedReducer(newState, { type: '' })
-    expect(ReduxClass.isReduxClass(newState)).to.be.false
-    expect(typeof newState === 'object').to.be.true
-    expect(ReduxClass.isReduxClass(newState2)).to.be.false
-    expect(typeof newState2 === 'object').to.be.true
+    expect(ReduxClass.isReduxClass(newState)).toBe(false)
+    expect(typeof newState === 'object').toBe(true)
+    expect(ReduxClass.isReduxClass(newState2)).toBe(false)
+    expect(typeof newState2 === 'object').toBe(true)
     done()
   })
 })

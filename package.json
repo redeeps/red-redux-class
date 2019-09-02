@@ -9,7 +9,7 @@
     "clean": "rimraf dist",
     "prepare": "npm run build",
     "lint": "tslint 'src/**/*.ts",
-    "test": "cross-env NODE_ENV=test mocha --require ts-node/register --recursive ./src/**/*.spec.ts",
+    "test": "jest ./src/",
     "test:watch": "npm run test -- --watch",
     "jest": "jest"
   },
@@ -28,15 +28,13 @@
   "author": "Jacek Raczykowski",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
+    "@types/jest": "^24.0.18",
     "@types/prop-types": "^15.7.0",
     "@types/redux": "^3.6.0",
-    "chai": "^3.5.0",
     "cross-env": "2.0.0",
-    "mocha": "^5.2.0",
     "prettier": "^1.16.4",
     "rimraf": "^2.6.2",
+    "ts-jest": "^24.0.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.13.1",
     "tslint-config-prettier": "^1.15.0",
@@ -56,9 +54,9 @@
     "tabWidth": 2
   },
   "jest": {
-    "testRegex": ".*\\.test\\.ts",
+    "testRegex": ".*\\.spec\\.ts",
     "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "moduleFileExtensions": [
       "ts",

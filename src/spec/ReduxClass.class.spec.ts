@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import { ReduxClass } from '../ReduxClass.class'
 
 describe('ReduxClass.class', function() {
@@ -27,7 +26,7 @@ describe('ReduxClass.class', function() {
         try {
           state.set('boolean', value)
         } catch (error) {
-          expect(error.error).to.be.equal('Bad value type')
+          expect(error.error).toBe('Bad value type')
         }
       })
       done()
@@ -41,7 +40,7 @@ describe('ReduxClass.class', function() {
         try {
           state.set('number', value)
         } catch (error) {
-          expect(error.error).to.be.equal('Bad value type')
+          expect(error.error).toBe('Bad value type')
         }
       })
       done()
@@ -55,7 +54,7 @@ describe('ReduxClass.class', function() {
         try {
           state.set('string', value)
         } catch (error) {
-          expect(error.error).to.be.equal('Bad value type')
+          expect(error.error).toBe('Bad value type')
         }
       })
       done()
@@ -69,7 +68,7 @@ describe('ReduxClass.class', function() {
         try {
           state.set('object', value)
         } catch (error) {
-          expect(error.error).to.be.equal('Bad value type')
+          expect(error.error).toBe('Bad value type')
         }
       })
       done()
@@ -79,10 +78,10 @@ describe('ReduxClass.class', function() {
       let vars = [10, '', {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'boolean', value)
-        expect(set).to.throw()
+        expect(set).toThrow()
       })
       const set = state.set.bind(state, 'boolean', true)
-      expect(set).to.not.throw()
+      expect(set).not.toThrow()
       done()
     })
     it('should throw error if type is different from types property from number', function(done) {
@@ -90,10 +89,10 @@ describe('ReduxClass.class', function() {
       let vars = [true, '', {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'number', value)
-        expect(set).to.throw()
+        expect(set).toThrow()
       })
       const set = state.set.bind(state, 'number', 10)
-      expect(set).to.not.throw()
+      expect(set).not.toThrow()
       done()
     })
     it('should throw error if type is different from types property from string', function(done) {
@@ -101,10 +100,10 @@ describe('ReduxClass.class', function() {
       let vars = [true, 10, {}]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'string', value)
-        expect(set).to.throw()
+        expect(set).toThrow()
       })
       const set = state.set.bind(state, 'string', '')
-      expect(set).to.not.throw()
+      expect(set).not.toThrow()
       done()
     })
     it('should throw error if type is different from types property from object', function(done) {
@@ -112,17 +111,17 @@ describe('ReduxClass.class', function() {
       let vars = [true, '', 10]
       vars.forEach((value) => {
         const set = state.set.bind(state, 'object', value)
-        expect(set).to.throw()
+        expect(set).toThrow()
       })
       const set = state.set.bind(state, 'object', {})
-      expect(set).to.not.throw()
+      expect(set).not.toThrow()
       done()
     })
 
     it('should set proper types', (done) => {
       const state = new TestState()
       state.set('custom', 1)
-      expect(state.get('custom') instanceof Custom).to.be.eql(true)
+      expect(state.get('custom') instanceof Custom).toBe(true)
       done()
     })
 
@@ -130,14 +129,14 @@ describe('ReduxClass.class', function() {
       const state = new TestState()
       state.set('custom', 1)
       state.set('custom', null)
-      expect(state.get('custom')).to.be.null
+      expect(state.get('custom')).toBe(null)
       done()
     })
 
     it('should return this if set value by key', (done) => {
       const state = new TestState()
       const state2 = state.set('custom', 1)
-      expect(state === state2).to.be.true
+      expect(state === state2).toBe(true)
       done()
     })
 
@@ -147,8 +146,8 @@ describe('ReduxClass.class', function() {
         custom: '1',
         test: true,
       })
-      expect(state === state2).to.be.true
-      expect(state.get('test')).to.be.true
+      expect(state === state2).toBe(true)
+      expect(state.get('test')).toBe(true)
       done()
     })
   })
@@ -161,7 +160,7 @@ describe('ReduxClass.class', function() {
         number: 10,
       })
       const newState = state.new()
-      expect(newState).to.be.eql(state)
+      expect(newState).toEqual(state)
       done()
     })
 
@@ -169,7 +168,7 @@ describe('ReduxClass.class', function() {
       const state = new ReduxClass({})
       state.$setNotNew()
       const newState = state.new()
-      expect(newState.isNew()).to.be.true
+      expect(newState.isNew()).toBe(true)
       done()
     })
 
@@ -198,22 +197,22 @@ describe('ReduxClass.class', function() {
         .get('inner3')
         .$setNotNew()
       const [target, root] = state.newPath('inner1.inner2.inner3')
-      expect(root.isNew()).to.be.true
-      expect(root.get('inner1').isNew()).to.be.true
+      expect(root.isNew()).toBe(true)
+      expect(root.get('inner1').isNew()).toBe(true)
       expect(
         root
           .get('inner1')
           .get('inner2')
           .isNew(),
-      ).to.be.true
+      ).toBe(true)
       expect(
         root
           .get('inner1')
           .get('inner2')
           .get('inner3')
           .isNew(),
-      ).to.be.true
-      expect(target.isNew()).to.be.true
+      ).toBe(true)
+      expect(target.isNew()).toBe(true)
       done()
     })
   })
@@ -222,18 +221,20 @@ describe('ReduxClass.class', function() {
     describe('react propType', () => {
       it('should return null if proper ReduxClass object provided', (done) => {
         const prop = new ReduxClass()
-        expect(ReduxClass.propType()({ prop }, 'prop', 'Component', '', 'prop'))
-          .to.be.null
+        expect(
+          ReduxClass.propType()({ prop }, 'prop', 'Component', '', 'prop'),
+        ).toBe(null)
         done()
       })
       it('should return null if proper extended ReduxClass object provided', (done) => {
         class MyReduxClass extends ReduxClass {}
         const prop = new MyReduxClass()
-        expect(ReduxClass.propType()({ prop }, 'prop', 'Component', '', 'prop'))
-          .to.be.null
+        expect(
+          ReduxClass.propType()({ prop }, 'prop', 'Component', '', 'prop'),
+        ).toBe(null)
         expect(
           MyReduxClass.propType()({ prop }, 'prop', 'Component', '', 'prop'),
-        ).to.be.null
+        ).toBe(null)
         done()
       })
       it('should return Error if extended ReduxClass object provided', (done) => {
@@ -247,7 +248,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         done()
       })
       it('should return Error for any other types', (done) => {
@@ -259,7 +260,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         expect(
           ReduxClass.propType()(
             { prop: '' },
@@ -268,7 +269,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         expect(
           ReduxClass.propType()(
             { prop: 1 },
@@ -277,7 +278,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         expect(
           ReduxClass.propType()(
             { prop: true },
@@ -286,7 +287,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         expect(
           ReduxClass.propType()(
             { prop: {} },
@@ -295,7 +296,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         expect(
           ReduxClass.propType()(
             { prop: undefined },
@@ -304,7 +305,7 @@ describe('ReduxClass.class', function() {
             '',
             'prop',
           ) instanceof Error,
-        ).to.be.true
+        ).toBe(true)
         done()
       })
     })
@@ -323,13 +324,13 @@ describe('ReduxClass.class', function() {
       }
       it('should set default values', (done) => {
         const state = new TestStateWithDefaults()
-        expect(state.get('custom')).to.be.eql(new Custom())
-        expect(state.get('boolean')).to.be.false
-        expect(state.get('boolean2')).to.be.true
-        expect(state.get('string')).to.be.eql('string')
-        expect(state.get('object')).to.be.eql({ object: 'object' })
-        expect(state.get('number')).to.be.eql(0)
-        expect(state.get('none')).to.be.eql(null)
+        expect(state.get('custom')).toEqual(new Custom())
+        expect(state.get('boolean')).toBe(false)
+        expect(state.get('boolean2')).toBe(true)
+        expect(state.get('string')).toBe('string')
+        expect(state.get('object')).toEqual({ object: 'object' })
+        expect(state.get('number')).toBe(0)
+        expect(state.get('none')).toBe(null)
         done()
       })
 
@@ -338,15 +339,15 @@ describe('ReduxClass.class', function() {
           boolean2: false,
           object: null,
         })
-        expect(state.get('boolean2')).to.be.false
-        expect(state.get('object')).to.be.null
+        expect(state.get('boolean2')).toBe(false)
+        expect(state.get('object')).toBe(null)
         done()
       })
 
       it('should be able to set non-null value', (done) => {
         const state = new TestStateWithDefaults()
         state.set('none', 'string')
-        expect(state.get('none')).to.be.eql('string')
+        expect(state.get('none')).toBe('string')
         done()
       })
 
@@ -359,7 +360,7 @@ describe('ReduxClass.class', function() {
         const shouldThrow = () => {
           new TestStateWithDefaultsAndTypes()
         }
-        expect(shouldThrow).to.throw
+        expect(shouldThrow).toThrow()
         done()
       })
     })
@@ -377,7 +378,7 @@ describe('ReduxClass.class', function() {
         testObject,
         'hiddenProperty',
       )
-      expect(descriptor).to.be.deep.equal({
+      expect(descriptor).toEqual({
         value: true,
         writable: true,
         enumerable: false,
