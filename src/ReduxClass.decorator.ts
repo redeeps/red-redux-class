@@ -3,7 +3,7 @@ import { ReduxClass } from './ReduxClass.class'
 
 export type TAction = AnyAction
 
-type MixedState<T> = T extends ReduxClass ? ReduxClass : object
+type MixedState<T> = T extends ReduxClass ? ReduxClass : any
 
 function searchObjectForNew(
   state: ReduxClass,
